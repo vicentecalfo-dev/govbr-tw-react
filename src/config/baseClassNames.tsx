@@ -32,6 +32,10 @@ const BASE_CLASSNAMES : any = {
     item: "govbr-accordion-item",
     trigger: "govbr-accordion-item-trigger",
     content: "govbr-accordion-item-content",
+  },
+  badge:{
+    root: "govbr-badge",
+    pulse: "govbr-badge-pulse"
   }
 };
 

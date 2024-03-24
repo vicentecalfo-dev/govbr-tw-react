@@ -165,3 +165,28 @@ export const FixedHeight = () => (
     </Accordion>
   </>
 );
+
+export const CustomStyle = () => (
+  <>
+    <Accordion value="Lucas Jordão" multi={false} className="bg-white w-[450px] border-govbr-gray-20 border shadow-md" fixedHeight="max-h-[120px]">
+      {Object.values(avatar).map(({ src,title, position, content }) => (
+        <Accordion.Item value={title}>
+         <div className="flex gap-3 items-center">
+          <span>
+            <Avatar
+              src={src}
+              title={title}
+              variant="image"
+            />
+          </span>
+          <span>
+            <h1 className="font-semibold">{title}</h1>
+            <h2 className="text-sm !font-light">{position}</h2>
+          </span>
+        </div>
+          <>{content}</>
+        </Accordion.Item>
+      ))}
+    </Accordion>
+  </>
+);

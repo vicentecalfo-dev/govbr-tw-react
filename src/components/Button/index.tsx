@@ -24,6 +24,7 @@ const Button: FC<ButtonProps> = ({
         BASE_CLASSNAMES.button.root
       )}
       {...props}
+      role="button"
     >
       {children}
     </button>

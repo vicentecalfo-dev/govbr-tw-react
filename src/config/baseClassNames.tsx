@@ -21,6 +21,17 @@ const BASE_CLASSNAMES : any = {
     success: "govbr-message-success",
     warning: "govbr-message-warning",
     info: "govbr-message-info"
+  },
+  flyout:{
+    root: "govbr-flyout",
+    toggle: "govbr-flyout-toggle",
+    content: "govbr-flyout-content"
+  },
+  accordion:{
+    root: "govbr-accordion",
+    item: "govbr-accordion-item",
+    trigger: "govbr-accordion-item-trigger",
+    content: "govbr-accordion-item-content",
   }
 };
 

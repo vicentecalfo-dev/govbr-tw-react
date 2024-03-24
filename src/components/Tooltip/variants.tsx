@@ -1,7 +1,7 @@
 import { cva } from "class-variance-authority";
 
 const variants = cva(
-  `invisible group-hover:visible opacity-0 group-hover:opacity-100 transition p-3 rounded absolute whitespace-nowrap  
+  `invisible group-hover:visible opacity-0 group-hover:opacity-100 transition p-2 rounded absolute whitespace-nowrap  
   m-auto 
   after:absolute
   after:h-0

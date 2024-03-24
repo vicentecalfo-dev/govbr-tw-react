@@ -76,6 +76,7 @@ const Message: FC<MessagesProps> = ({
       )}
       {...props}
       ref={myRef}
+      role="alert"
     >
       <span className="flex gap-3 items-center p-6">
         {hasIcon ? (

@@ -36,6 +36,13 @@ const BASE_CLASSNAMES : any = {
   badge:{
     root: "govbr-badge",
     pulse: "govbr-badge-pulse"
+  },
+  card:{
+    root: "govbr-card",
+    header: "govbr-card-header",
+    main: "govbr-card-main",
+    footer: "govbr-card-footer",
+    disabled: "govbr-card-disabled-overlay"
   }
 };
 

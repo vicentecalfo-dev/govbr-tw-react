@@ -7,10 +7,11 @@ module.exports = {
         govbr: {
           pure: {
             0: "#FFFFFF",
-            100: "000000"
+            100: "#000000"
           },
           gray: {
             2: "#F8F8F8",
+            10: "#E6E6E6",
             20: "#CCCCCC",
             80: "#333333",
           },

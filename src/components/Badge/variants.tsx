@@ -13,7 +13,7 @@ const variants = cva(
         "danger-light": "bg-govbr-red-vivid-10 text-govbr-red-vivid-50",
         warning: "bg-govbr-yellow-vivid-20 text-govbr-pure-100",
         "warning-light": "bg-govbr-yellow-vivid-5 text-govbr-pure-100",
-        neutral: "bg-govbr-gray-20 text-govbr-pure-100"
+        neutral: "bg-govbr-gray-10 text-govbr-pure-100"
       },
       size:{
         small:"py-1 px-2 text-xs",

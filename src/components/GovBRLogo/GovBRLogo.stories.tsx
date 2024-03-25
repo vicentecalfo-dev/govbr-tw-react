@@ -7,7 +7,7 @@ export default {
 
 export const Default = () => (
   <>
-    <GovBRLogo className="p-5" />
+    <GovBRLogo className="p" />
   </>
 );
 

@@ -2,6 +2,9 @@ import BASE_CLASSNAMES from "@/src/config/baseClassNames";
 import { cn } from "@/src/libs/utils";
 import { VariantProps } from "class-variance-authority";
 import messageVariants from "./variants";
+import iconVariants from "./icon-variants";
+import timerVariants from "./timer-variants";
+import closeButtonVariants from "./close-button-variants";
 import { ComponentProps, FC, createRef, useEffect, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -46,9 +49,6 @@ const Message: FC<MessagesProps> = ({
     warning: faTriangleExclamation,
     info: faInfoCircle,
   };
-  const [iconStyle, messageStyle]: any = messageVariants({ variant }).split(
-    " "
-  );
   const [counter, setCounter] = useState(0);
   useEffect(() => {
     if (closable === "timer" || closable === "both") {
@@ -68,8 +68,7 @@ const Message: FC<MessagesProps> = ({
   return (
     <span
       className={cn(
-        "flex flex-col",
-        messageStyle,
+        messageVariants({ variant }),
         className,
         BASE_CLASSNAMES.message.root,
         BASE_CLASSNAMES.message[variant as any]
@@ -81,7 +80,7 @@ const Message: FC<MessagesProps> = ({
       <span className="flex gap-3 items-center p-6">
         {hasIcon ? (
           <span className="size-10 flex items-center justify-center">
-            <FontAwesomeIcon icon={icon} className={cn(iconStyle, "size-6")} />
+            <FontAwesomeIcon icon={icon} className={cn(iconVariants({variant}))} />
           </span>
         ) : (
           ""
@@ -93,7 +92,7 @@ const Message: FC<MessagesProps> = ({
               onClick={handleDestory}
               size="icon"
               variant={closeButtonVariant[variant as any]}
-              className="hover:!bg-black/5 "
+              className={cn(closeButtonVariants({variant}))}
             >
               <FontAwesomeIcon icon={faXmark} />
             </Button>
@@ -105,7 +104,7 @@ const Message: FC<MessagesProps> = ({
       {closable === "timer" || closable === "both" ? (
         <span className={cn("flex w-full -mt-2")}>
           <span
-            className={cn("h-2", "bg-black/5")}
+            className={cn(timerVariants({variant}))}
             style={{
               width: (counter / timer) * 100 + "%",
               transition: `all 1s linear`,

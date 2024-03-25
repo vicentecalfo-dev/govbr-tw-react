@@ -1,7 +1,7 @@
 import { cva } from "class-variance-authority";
 
 const variants = cva(
-  "flex items-center justify-center rounded-full font-semibold gap-3 disabled:opacity-50 disabled:cursor-not-allowed relative",
+  "inline-flex items-center justify-center rounded-full font-semibold gap-3 disabled:opacity-50 disabled:cursor-not-allowed relative",
   {
     variants: {
       variant: {

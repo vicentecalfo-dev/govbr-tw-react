@@ -3,6 +3,7 @@ import { getUIDClassName, cn } from "@/src/libs/utils";
 import React, { createContext, useContext, useEffect, useState } from "react";
 import { ComponentProps, FC, useRef } from "react";
 import accordionVariants from "./variants";
+import accordionContentVariants from "./content-variants";
 import { VariantProps } from "class-variance-authority";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -115,15 +116,6 @@ const AccordionItem: FC<AccordionItemProps> = ({
   const suffixCn = getUIDClassName();
   const triggerId = `${BASE_CLASSNAMES.accordion.trigger}-${id === undefined ? suffixCn : id}`;
   const contentId = `${BASE_CLASSNAMES.accordion.content}-${id === undefined ? suffixCn : id}`;
-  const contenTextStyle: any = {
-    default: "text-govbr-pure-100",
-    dark: "text-govbr-pure-0",
-  };
-  const iconPositionStyle: any = {
-    left: "flex-row-reverse",
-    right: "flex-row",
-  };
-
   return (
     <li
       className={cn(BASE_CLASSNAMES.accordion.item)}
@@ -133,9 +125,7 @@ const AccordionItem: FC<AccordionItemProps> = ({
       <header
         className={cn(
           BASE_CLASSNAMES.accordion.trigger,
-          accordionVariants({ variant }),
-          iconPositionStyle[iconPosition],
-          "py-3 px-6 border-b font-semibold flex justify-start items-center gap-6"
+          accordionVariants({ variant, iconPosition })
         )}
         ref={listTriggerRef}
         id={triggerId}
@@ -158,8 +148,7 @@ const AccordionItem: FC<AccordionItemProps> = ({
         <div
           className={cn(
             BASE_CLASSNAMES.accordion.content,
-            contenTextStyle[variant],
-            "py-3 px-6"
+            accordionContentVariants({ variant })
           )}
           ref={listContentRef}
           id={contentId}

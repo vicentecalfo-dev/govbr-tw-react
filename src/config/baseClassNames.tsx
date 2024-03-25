@@ -43,6 +43,10 @@ const BASE_CLASSNAMES : any = {
     main: "govbr-card-main",
     footer: "govbr-card-footer",
     disabled: "govbr-card-disabled-overlay"
+  },
+  input:{
+    root: "govbr-input",
+    control: "govbr-input-control"
   }
 };
 

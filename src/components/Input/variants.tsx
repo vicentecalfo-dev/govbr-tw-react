@@ -3,7 +3,7 @@ import { cva } from "class-variance-authority";
 const variants = cva("rounded-md size-full placeholder:italic placeholder:text-base border box-border disabled:opacity-60 disabled:cursor-not-allowed read-only:cursor-default read-only:outline-none", {
   variants: {
     variant: {
-      default: "bg-govbr-pure-0 border-govbr-gray-10 outline-govbr-blue-warm-vivid-70 text-govbr-pure-100 hover:bg-govbr-gray-10  disabled:hover:bg-govbr-pure-0 read-only:hover:bg-govbr-pure-0",
+      default: "bg-govbr-pure-0 border-govbr-gray-20 outline-govbr-blue-warm-vivid-70 text-govbr-pure-100 hover:bg-govbr-gray-10  disabled:hover:bg-govbr-pure-0 read-only:hover:bg-govbr-pure-0",
       danger: "border-govbr-red-vivid-50 outline-govbr-red-vivid-50 bg-govbr-red-vivid-10 placeholder:text-govbr-red-vivid-50 text-govbr-red-vivid-50",
       success: "border-govbr-green-cool-vivid-50 outline-govbr-green-cool-vivid-50 bg-govbr-green-cool-vivid-5 placeholder:text-govbr-green-cool-vivid-50 text-govbr-green-cool-vivid-50",
       warning: "border-govbr-yellow-vivid-20 outline-govbr-yellow-vivid-20 bg-govbr-yellow-vivid-5 placeholder:text-govbr-pure-100 text-govbr-pure-100",

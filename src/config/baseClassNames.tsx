@@ -47,6 +47,10 @@ const BASE_CLASSNAMES : any = {
   input:{
     root: "govbr-input",
     control: "govbr-input-control"
+  },
+  radio:{
+    root: "govbr-input-radio",
+    label: "govbr-input-radio-label"
   }
 };
 

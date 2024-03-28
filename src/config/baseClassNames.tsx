@@ -56,6 +56,10 @@ const BASE_CLASSNAMES: any = {
     root: "govbr-input-checkbox",
     label: "govbr-input-checkbox-label",
   },
+  status: {
+    root: "govbr-badge-status",
+    pulse: "govbr-badge-status-pulse"
+  },
 };
 
 export default BASE_CLASSNAMES;

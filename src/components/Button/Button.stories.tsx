@@ -169,6 +169,7 @@ export const Magic = () => (
         <div className={lightTheme}>
             <Button variant="magic">Magic Default</Button>
             <Button variant="magic" size="icon"> <FontAwesomeIcon icon={faHouse} /></Button>
+            <Button variant="magic" disabled>Disabled</Button>
         </div>
     </>
 );

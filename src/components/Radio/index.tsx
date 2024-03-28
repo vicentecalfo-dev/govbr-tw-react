@@ -31,7 +31,7 @@ const Radio: FC<RadioProps> = forwardRef(
           labelVariant({ variant, disabled }),
           BASE_CLASSNAMES.radio.root
         )}
-        id={radioId}
+        htmlFor={radioId}
       >
         <input
           className={cn(
@@ -40,9 +40,7 @@ const Radio: FC<RadioProps> = forwardRef(
             BASE_CLASSNAMES.radio.root
           )}
           type="radio"
-          role="radio"
-          aria-checked={checked}
-          aria-labelledby={radioId}
+          id={radioId}
           disabled={disabled}
           checked={checked}
           value={value}

@@ -31,6 +31,7 @@ const variants = cva(
         "outline-warning":
           "hover:bg-govbr-yellow-vivid-5 border-govbr-yellow-vivid-20 border text-govbr-pure-100",
         "ghost-warning": "hover:bg-govbr-yellow-vivid-5 text-govbr-pure-100",
+        "magic": "bg-govbr-green-cool-vivid-50 hover:bg-govbr-green-cool-vivid-50/80 text-govbr-pure-0 border-[10px] border-govbr-gray-10 box-content shadow-md",
       },
       density: {
         low: "h-12 min-w-12",

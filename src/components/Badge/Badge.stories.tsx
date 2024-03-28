@@ -90,3 +90,13 @@ export const CustomStyle = () => (
     </Button>
   </div>
 );
+
+export const Types = () => (
+  <div className="flex gap-5">
+    <Badge>Default Light</Badge>
+    <Badge variant="default" type="square">Default</Badge>
+    <Badge variant="danger" type="pill">
+      99+
+    </Badge>
+  </div>
+);

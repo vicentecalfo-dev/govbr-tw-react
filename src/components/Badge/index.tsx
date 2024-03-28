@@ -13,12 +13,13 @@ const Badge: FC<BadgeProps> = ({
   children,
   variant = "default-light",
   size = "small",
+  type = "default",
   ...props
 }) => {
   return (
     <span
       className={cn(
-        badgeVariants({ variant, size }),
+        badgeVariants({ variant, size, type }),
         className,
         BASE_CLASSNAMES.badge.root,
       )}

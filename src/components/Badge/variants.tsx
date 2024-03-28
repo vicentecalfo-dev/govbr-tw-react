@@ -1,7 +1,7 @@
 import { cva } from "class-variance-authority";
 
 const variants = cva(
-  `inline-flex whitespace-nowrap text-center rounded-md items-center justify-center`,
+  `inline-flex whitespace-nowrap text-center items-center justify-center`,
   {
     variants: {
       variant: {
@@ -19,12 +19,18 @@ const variants = cva(
         small:"py-1 px-2 text-xs gap-2",
         medium:"py-2 px-3 text-sm gap-3",
         large: "py-3 px-4 text-base gap-4"
+      },
+      type:{
+        square:"",
+        default:"rounded-md",
+        pill:"rounded-full"
       }
     },
 
     defaultVariants: {
       variant: "default-light",
-      size: "small"
+      size: "small",
+      type: "default"
     },
   }
 );

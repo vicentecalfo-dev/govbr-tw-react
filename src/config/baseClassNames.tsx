@@ -1,4 +1,4 @@
-const BASE_CLASSNAMES : any = {
+const BASE_CLASSNAMES: any = {
   avatar: {
     root: "govbr-avatar",
   },
@@ -8,50 +8,54 @@ const BASE_CLASSNAMES : any = {
   spinner: {
     root: "govbr-spinner",
   },
-  govbrLogo:{
-    root: "govbr-logo"
+  govbrLogo: {
+    root: "govbr-logo",
   },
-  tooltip:{
+  tooltip: {
     root: "govbr-tooltip",
-    content: "govbr-tooltip-content"
+    content: "govbr-tooltip-content",
   },
-  message:{
+  message: {
     root: "govbr-message",
     danger: "govbr-message-danger",
     success: "govbr-message-success",
     warning: "govbr-message-warning",
-    info: "govbr-message-info"
+    info: "govbr-message-info",
   },
-  flyout:{
+  flyout: {
     root: "govbr-flyout",
     toggle: "govbr-flyout-toggle",
-    content: "govbr-flyout-content"
+    content: "govbr-flyout-content",
   },
-  accordion:{
+  accordion: {
     root: "govbr-accordion",
     item: "govbr-accordion-item",
     trigger: "govbr-accordion-item-trigger",
     content: "govbr-accordion-item-content",
   },
-  badge:{
+  badge: {
     root: "govbr-badge",
-    pulse: "govbr-badge-pulse"
+    pulse: "govbr-badge-pulse",
   },
-  card:{
+  card: {
     root: "govbr-card",
     header: "govbr-card-header",
     main: "govbr-card-main",
     footer: "govbr-card-footer",
-    disabled: "govbr-card-disabled-overlay"
+    disabled: "govbr-card-disabled-overlay",
   },
-  input:{
+  input: {
     root: "govbr-input",
-    control: "govbr-input-control"
+    control: "govbr-input-control",
   },
-  radio:{
+  radio: {
     root: "govbr-input-radio",
-    label: "govbr-input-radio-label"
-  }
+    label: "govbr-input-radio-label",
+  },
+  checkbox: {
+    root: "govbr-input-checkbox",
+    label: "govbr-input-checkbox-label",
+  },
 };
 
 export default BASE_CLASSNAMES;

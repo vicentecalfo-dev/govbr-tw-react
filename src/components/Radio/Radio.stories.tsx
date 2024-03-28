@@ -9,12 +9,26 @@ export default {
 export const Default = () => {
   const [currentValue, setCurrentValue] = useState<any>("A");
   const items: any = [
-    { value: "A", label: "Opção A", variant: "default" },
-    { value: "B", label: "Opção B", variant: "default" },
+    {
+      value: "A",
+      label: "Default",
+      variant: "default",
+    },
+    {
+      value: "B",
+      label: "Default Solid",
+      variant: "default-solid",
+    },
+    {
+      value: "G",
+      label: "Disabled",
+      variant: "default-solid",
+      disabled: true,
+    },
   ];
   return (
     <div className="flex flex-col gap-3">
-      {items.map(({ value, label, variant }: any, index: number) => (
+      {items.map(({ value, label, variant, disabled }: any, index: number) => (
         <Radio
           name="teste"
           variant={variant}
@@ -22,6 +36,7 @@ export const Default = () => {
           key={index}
           checked={value === currentValue}
           onChange={(e) => setCurrentValue(e.target.value)}
+          disabled={disabled ? disabled : false}
         >
           {label}
         </Radio>
@@ -30,16 +45,38 @@ export const Default = () => {
   );
 };
 
-export const States = () => {
+export const Success = () => {
+  const [currentValue, setCurrentValue] = useState<any>("A");
   const items: any = [
-    { value: "Success", label: "Success", variant: "success" },
-    { value: "Danger", label: "Danger", variant: "danger" },
-    { value: "Warning", label: "Warning", variant: "warning" },
+    {
+      value: "A",
+      label: "Default",
+      variant: "success",
+    },
+    {
+      value: "B",
+      label: "Default Solid",
+      variant: "success-solid",
+    },
+    {
+      value: "G",
+      label: "Disabled",
+      variant: "success",
+      disabled: true,
+    },
   ];
   return (
     <div className="flex flex-col gap-3">
-      {items.map(({ value, label, variant }: any, index: number) => (
-        <Radio name="teste-1" variant={variant} value={value} key={index}>
+      {items.map(({ value, label, variant, disabled }: any, index: number) => (
+        <Radio
+          name="teste"
+          variant={variant}
+          value={value}
+          key={index}
+          checked={value === currentValue}
+          onChange={(e) => setCurrentValue(e.target.value)}
+          disabled={disabled ? disabled : false}
+        >
           {label}
         </Radio>
       ))}
@@ -47,17 +84,38 @@ export const States = () => {
   );
 };
 
-export const Disabled = () => {
+export const Danger = () => {
+  const [currentValue, setCurrentValue] = useState<any>("A");
   const items: any = [
-    { value: "Default", label: "Default", variant: "default" },
-    { value: "Success", label: "Success", variant: "success" },
-    { value: "Danger", label: "Danger", variant: "danger" },
-    { value: "Warning", label: "Warning", variant: "warning" },
+    {
+      value: "A",
+      label: "Default",
+      variant: "danger",
+    },
+    {
+      value: "B",
+      label: "Default Solid",
+      variant: "danger-solid",
+    },
+    {
+      value: "G",
+      label: "Disabled",
+      variant: "danger",
+      disabled: true,
+    },
   ];
   return (
     <div className="flex flex-col gap-3">
-      {items.map(({ value, label, variant }: any, index: number) => (
-        <Radio name="teste-1" variant={variant} value={value} key={index} disabled>
+      {items.map(({ value, label, variant, disabled }: any, index: number) => (
+        <Radio
+          name="teste"
+          variant={variant}
+          value={value}
+          key={index}
+          checked={value === currentValue}
+          onChange={(e) => setCurrentValue(e.target.value)}
+          disabled={disabled ? disabled : false}
+        >
           {label}
         </Radio>
       ))}
@@ -65,18 +123,80 @@ export const Disabled = () => {
   );
 };
 
-export const Dark = () =>{
-    const items: any = [
-        { value: "Opção A", label: "Opção A", variant: "dark" ,disabled:false},
-        { value: "Opção B", label: "Opção B", variant: "dark", disabled:false},
-        { value: "Danger", label: "Danger", variant: "dark", disabled:true },
-      ];
-    return (
-  <div className="flex flex-col gap-3 bg-govbr-blue-warm-vivid-90 p-6">
-      {items.map(({ value, label, variant,disabled }: any, index: number) => (
-        <Radio name="teste-1" variant={variant} value={value} key={index} disabled={disabled}>
+export const Warning = () => {
+  const [currentValue, setCurrentValue] = useState<any>("A");
+  const items: any = [
+    {
+      value: "A",
+      label: "Default",
+      variant: "warning",
+    },
+    {
+      value: "B",
+      label: "Default Solid",
+      variant: "warning-solid",
+    },
+    {
+      value: "G",
+      label: "Disabled",
+      variant: "warning",
+      disabled: true,
+    },
+  ];
+  return (
+    <div className="flex flex-col gap-3">
+      {items.map(({ value, label, variant, disabled }: any, index: number) => (
+        <Radio
+          name="teste"
+          variant={variant}
+          value={value}
+          key={index}
+          checked={value === currentValue}
+          onChange={(e) => setCurrentValue(e.target.value)}
+          disabled={disabled ? disabled : false}
+        >
           {label}
         </Radio>
       ))}
-  </div>
-)};
+    </div>
+  );
+};
+
+export const Dark = () => {
+  const [currentValue, setCurrentValue] = useState<any>("A");
+  const items: any = [
+    {
+      value: "A",
+      label: "Default",
+      variant: "dark",
+    },
+    {
+      value: "B",
+      label: "Default Solid",
+      variant: "dark-solid",
+    },
+    {
+      value: "G",
+      label: "Disabled",
+      variant: "dark",
+      disabled: true,
+    },
+  ];
+  return (
+    <div className="flex flex-col gap-3 bg-govbr-blue-warm-vivid-90 p-6">
+      {items.map(({ value, label, variant, disabled }: any, index: number) => (
+        <Radio
+          name="teste"
+          variant={variant}
+          value={value}
+          key={index}
+          checked={value === currentValue}
+          onChange={(e) => setCurrentValue(e.target.value)}
+          disabled={disabled ? disabled : false}
+        >
+          {label}
+        </Radio>
+      ))}
+    </div>
+  );
+};

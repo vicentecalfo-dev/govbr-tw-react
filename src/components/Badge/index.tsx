@@ -22,7 +22,6 @@ const Badge: FC<BadgeProps> = ({
         className,
         BASE_CLASSNAMES.badge.root,
       )}
-      role="status"
       {...props}
     >
       {children}

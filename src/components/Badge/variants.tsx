@@ -16,9 +16,9 @@ const variants = cva(
         neutral: "bg-govbr-gray-10 text-govbr-pure-100"
       },
       size:{
-        small:"py-1 px-2 text-xs",
-        medium:"py-2 px-3 text-sm",
-        large: "py-3 px-4 text-base"
+        small:"py-1 px-2 text-xs gap-2",
+        medium:"py-2 px-3 text-sm gap-3",
+        large: "py-3 px-4 text-base gap-4"
       }
     },
 

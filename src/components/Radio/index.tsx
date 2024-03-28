@@ -16,6 +16,7 @@ const Radio: FC<RadioProps> = forwardRef(
       className,
       checked,
       disabled,
+      id = `${BASE_CLASSNAMES.radio.label}-${getUIDClassName()}`,
       value,
       variant = "default",
       density = "default",
@@ -23,15 +24,13 @@ const Radio: FC<RadioProps> = forwardRef(
     },
     ref
   ) => {
-    const suffixId = getUIDClassName();
-    const radioId = `${BASE_CLASSNAMES.radio.label}-${suffixId}`;
     return (
       <label
         className={cn(
           labelVariant({ variant, disabled }),
           BASE_CLASSNAMES.radio.root
         )}
-        htmlFor={radioId}
+        htmlFor={id}
       >
         <input
           className={cn(
@@ -40,7 +39,7 @@ const Radio: FC<RadioProps> = forwardRef(
             BASE_CLASSNAMES.radio.root
           )}
           type="radio"
-          id={radioId}
+          id={id}
           disabled={disabled}
           checked={checked}
           value={value}

@@ -15,7 +15,7 @@ import {
 interface AccordionProps
   extends ComponentProps<"ul">,
     VariantProps<typeof accordionVariants> {
-  value: string | Array<string>;
+  value?: string | Array<string>;
   multi?: boolean;
   icons?: Array<IconDefinition>;
   iconPosition?: "left" | "right";
@@ -26,9 +26,9 @@ interface AccordionItemProps extends ComponentProps<"li"> {
   value: string;
 }
 
-const AccordianContext: any = createContext(null);
+const AccordionContext: any = createContext(null);
 
-const Accordion: any = ({
+const Accordion = ({
   className,
   children,
   value,
@@ -38,9 +38,10 @@ const Accordion: any = ({
   iconPosition = "right",
   fixedHeight = "",
   icons = [faChevronDown, faChevronUp],
+  ref,
   ...props
 }: AccordionProps) => {
-  const listRef = useRef<HTMLUListElement>(null);
+  ref = ref === undefined ? useRef<HTMLUListElement>(null) : ref;
   const [selected, setSelected]: any = useState(value);
 
   useEffect(() => {
@@ -48,7 +49,7 @@ const Accordion: any = ({
   }, [selected]);
 
   return (
-    <AccordianContext.Provider
+    <AccordionContext.Provider
       value={{
         selected,
         setSelected,
@@ -62,11 +63,11 @@ const Accordion: any = ({
       <ul
         className={cn(BASE_CLASSNAMES.accordion.root, className)}
         {...props}
-        ref={listRef}
+        ref={ref}
       >
         {children}
       </ul>
-    </AccordianContext.Provider>
+    </AccordionContext.Provider>
   );
 };
 
@@ -86,7 +87,7 @@ const AccordionItem: FC<AccordionItemProps> = ({
     icons,
     iconPosition,
     fixedHeight,
-  }: any = useContext(AccordianContext);
+  }: any = useContext(AccordionContext);
   const [iconClose, iconOpen] = icons;
   const [open, setOpen] = useState(false);
   useEffect(() => {

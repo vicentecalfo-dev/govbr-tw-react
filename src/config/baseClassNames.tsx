@@ -60,6 +60,12 @@ const BASE_CLASSNAMES: any = {
     root: "govbr-badge-status",
     pulse: "govbr-badge-status-pulse"
   },
+  tabs:{
+    root: "govbr-tabs",
+    tab: "govbr-tab",
+    button:"govbr-tab-button",
+    content:"govbr-tab-content"
+  }
 };
 
 export default BASE_CLASSNAMES;

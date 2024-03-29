@@ -1,4 +1,4 @@
-import { ComponentProps, createContext, forwardRef, useContext } from "react";
+import { ComponentProps, createContext, forwardRef, useContext, useEffect } from "react";
 import dialogVariants from "./variants";
 import dialogContentVariants from "./content-variants";
 import dialogInnerContentVariants from "./inner-content-variants";
@@ -32,11 +32,13 @@ const Dialog: any = forwardRef<HTMLDialogElement, DialogProps>(
     },
     ref
   ) => {
-    if (!closeOnEsc) {
-      (ref as any).current.addEventListener("keydown", (e: any) => {
-        if (e.keyCode === 27) e.preventDefault();
-      });
-    }
+    useEffect(()=>{
+      if (!closeOnEsc) {
+        (ref as any).current.addEventListener("keydown", (e: any) => {
+          if (e.keyCode === 27) e.preventDefault();
+        });
+      }
+    }, [])
 
     return (
       <DialogContext.Provider value={{ variant, padding }}>

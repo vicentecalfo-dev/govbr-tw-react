@@ -1,10 +1,10 @@
 import { cva } from "class-variance-authority";
 
-const variants = cva("", {
+const variants = cva("flex items-center", {
   variants: {
     variant: {
-      default: "bg-govbr-pure-0",
-      dark:""
+      default: "text-govbr-pure-100",
+      dark:"text-govbr-blue-warm-20"
     },
     padding:{
         true:"p-6",

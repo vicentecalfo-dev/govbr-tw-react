@@ -1,6 +1,6 @@
 import { cva } from "class-variance-authority";
 
-const variants = cva("font-bold text-lg", {
+const variants = cva("font-bold text-lg flex items-center", {
   variants: {
     variant: {
         default: "text-govbr-blue-warm-vivid-70",

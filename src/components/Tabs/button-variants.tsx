@@ -1,6 +1,6 @@
 import { cva } from "class-variance-authority";
 
-const variants = cva("px-3 flex items-center h-full border-b-4 border-b-transparent box-border font-semibold ", {
+const variants = cva("px-6 flex items-center h-full border-b-4 border-b-transparent box-border font-semibold ", {
   variants: {
     variant: {
       default: "aria-selected:border-b-govbr-blue-warm-vivid-70 aria-selected:hover:bg-govbr-pure-0  aria-selected:text-govbr-blue-warm-vivid-70 hover:bg-govbr-gray-10",

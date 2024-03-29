@@ -65,6 +65,10 @@ const BASE_CLASSNAMES: any = {
     tab: "govbr-tab",
     button:"govbr-tab-button",
     content:"govbr-tab-content"
+  },
+  dialog:{
+    root:"govbr-dialog",
+    content:"govbr-dialog-content"
   }
 };
 

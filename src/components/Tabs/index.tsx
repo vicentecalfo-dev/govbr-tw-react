@@ -2,10 +2,6 @@ import { cn, getUIDClassName } from "@/src/libs/utils";
 import { VariantProps } from "class-variance-authority";
 import {
   ComponentProps,
-  FC,
-  createContext,
-  useContext,
-  useEffect,
   useRef,
   useState,
 } from "react";

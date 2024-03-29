@@ -1,6 +1,6 @@
 import { cva } from "class-variance-authority";
 
-const variants = cva("w-full p-3 overflow-auto", {
+const variants = cva("w-full p-6 overflow-auto", {
   variants: {
     variant: {
       default: "",

@@ -69,6 +69,9 @@ const BASE_CLASSNAMES: any = {
   dialog:{
     root:"govbr-dialog",
     content:"govbr-dialog-content"
+  },
+  featuredTitle:{
+    root: "govbr-featured-title"
   }
 };
 

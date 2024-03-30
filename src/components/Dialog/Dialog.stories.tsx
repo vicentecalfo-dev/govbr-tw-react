@@ -32,7 +32,7 @@ export const Default = () => {
         <Dialog.Header>
           <h1>Escola Nacional de Botânica Tropical</h1>
         </Dialog.Header>
-        <Dialog.Content className="h-[200px] overflow-auto">
+        <Dialog.Main className="h-[200px] overflow-auto">
           <p>
             Inaugurada em 6 de junho de 2001, a Escola Nacional de Botânica
             Tropical (ENBT) centraliza as atividades de pós-graduação, extensão,
@@ -63,7 +63,7 @@ export const Default = () => {
             alta relevância à sociedade, transparência e uso da biodiversidade
             como agente de justiça social.
           </p>
-        </Dialog.Content>
+        </Dialog.Main>
         <Dialog.Footer>
           <Button onClick={toggleDialog}>Fechar</Button>
         </Dialog.Footer>
@@ -98,7 +98,7 @@ export const Dark = () => {
         <Dialog.Header>
           <h1>Escola Nacional de Botânica Tropical</h1>
         </Dialog.Header>
-        <Dialog.Content className="h-[200px] overflow-auto">
+        <Dialog.Main className="h-[200px] overflow-auto">
           <p>
             Inaugurada em 6 de junho de 2001, a Escola Nacional de Botânica
             Tropical (ENBT) centraliza as atividades de pós-graduação, extensão,
@@ -129,7 +129,7 @@ export const Dark = () => {
             alta relevância à sociedade, transparência e uso da biodiversidade
             como agente de justiça social.
           </p>
-        </Dialog.Content>
+        </Dialog.Main>
         <Dialog.Footer>
           <Button onClick={toggleDialog} variant="default-dark">
             Fechar
@@ -161,7 +161,7 @@ export const CustomColors = () => {
         <Dialog.Header className="bg-govbr-gray-10">
           <h1>Escola Nacional de Botânica Tropical</h1>
         </Dialog.Header>
-        <Dialog.Content className="h-[200px] overflow-auto bg-govbr-gray-2">
+        <Dialog.Main className="h-[200px] overflow-auto bg-govbr-gray-2">
           <p>
             Inaugurada em 6 de junho de 2001, a Escola Nacional de Botânica
             Tropical (ENBT) centraliza as atividades de pós-graduação, extensão,
@@ -192,7 +192,7 @@ export const CustomColors = () => {
             alta relevância à sociedade, transparência e uso da biodiversidade
             como agente de justiça social.
           </p>
-        </Dialog.Content>
+        </Dialog.Main>
         <Dialog.Footer className="bg-govbr-gray-10">
           <Button onClick={toggleDialog}>Fechar</Button>
         </Dialog.Footer>
@@ -228,7 +228,7 @@ export const NoPadding = () => {
         <Dialog.Header>
           <h1>Escola Nacional de Botânica Tropical</h1>
         </Dialog.Header>
-        <Dialog.Content className="h-[200px] overflow-auto">
+        <Dialog.Main className="h-[200px] overflow-auto">
           <p>
             Inaugurada em 6 de junho de 2001, a Escola Nacional de Botânica
             Tropical (ENBT) centraliza as atividades de pós-graduação, extensão,
@@ -259,7 +259,7 @@ export const NoPadding = () => {
             alta relevância à sociedade, transparência e uso da biodiversidade
             como agente de justiça social.
           </p>
-        </Dialog.Content>
+        </Dialog.Main>
         <Dialog.Footer>
           <Button onClick={toggleDialog}>Fechar</Button>
         </Dialog.Footer>
@@ -300,7 +300,7 @@ export const Compound = () => {
             <FontAwesomeIcon icon={faXmark} />
           </Button>
         </Dialog.Header>
-        <Dialog.Content className="h-[200px] overflow-auto">
+        <Dialog.Main className="h-[200px] overflow-auto">
           <p className="mb-3 font-semibold">A janela de diálogo permanecerá aberta mesmo quando clicado fora dela ou ao pressionar a tecla ESC. A única maneira de fechá-la é através do botão específico designado para esse fim.</p>
           <p>
             Inaugurada em 6 de junho de 2001, a Escola Nacional de Botânica
@@ -332,7 +332,7 @@ export const Compound = () => {
             alta relevância à sociedade, transparência e uso da biodiversidade
             como agente de justiça social.
           </p>
-        </Dialog.Content>
+        </Dialog.Main>
         <Dialog.Footer className="flex gap-6">
           <Button>Saiba Mais</Button>
           <Button variant="outline">Pós-Graduação</Button>

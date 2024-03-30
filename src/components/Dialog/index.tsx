@@ -16,9 +16,15 @@ interface DialogProps
   closeOnEsc?: boolean;
 }
 
+interface DialogComponent extends React.ForwardRefExoticComponent<DialogProps & React.RefAttributes<HTMLDialogElement>>{
+  Header: typeof DialogHeader;
+  Main: typeof DialogMain;
+  Footer: typeof DialogFooter;
+}
+
 const DialogContext: any = createContext(null);
 
-const Dialog: any = forwardRef<HTMLDialogElement, DialogProps>(
+const DialogForwardRef = forwardRef<HTMLDialogElement, DialogProps>(
   (
     {
       children,
@@ -29,7 +35,7 @@ const Dialog: any = forwardRef<HTMLDialogElement, DialogProps>(
       persist = false,
       closeOnEsc = true,
       ...props
-    },
+    }:DialogProps,
     ref
   ) => {
     useEffect(()=>{
@@ -77,7 +83,7 @@ const DialogHeader: any = ({ children, className }: any) => {
     useContext(DialogContext);
   return <header className={cn(dialogHeaderVariants({variant, padding}),className)}>{children}</header>;
 };
-const DialogContent: any = ({ children, className }: any) => {
+const DialogMain: any = ({ children, className }: any) => {
   const { variant, padding }: VariantProps<typeof dialogVariants> =
     useContext(DialogContext);
   return <main className={cn(dialogInnerContentVariants({variant, padding}),className)}>{children}</main>;
@@ -88,8 +94,13 @@ const DialogFooter: any = ({ children, className }: any) => {
   return <footer className={cn(dialogFooterVariants({variant, padding}),className)}>{children}</footer>;
 };
 
-Dialog.Header = DialogHeader;
-Dialog.Content = DialogContent;
-Dialog.Footer = DialogFooter;
+
+const Dialog = {
+  ...DialogForwardRef,
+  Header:DialogHeader,
+  Main:DialogMain,
+  Footer:DialogFooter,
+
+} as DialogComponent;
 
 export default Dialog;

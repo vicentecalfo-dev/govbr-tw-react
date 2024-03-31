@@ -72,6 +72,9 @@ const BASE_CLASSNAMES: any = {
   },
   featuredTitle:{
     root: "govbr-featured-title"
+  },
+  breadcrumb:{
+    root: "govbr-breadcrumb"
   }
 };
 

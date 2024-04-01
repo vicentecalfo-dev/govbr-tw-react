@@ -75,6 +75,12 @@ const BASE_CLASSNAMES: any = {
   },
   breadcrumb:{
     root: "govbr-breadcrumb"
+  },
+  list:{
+    root: "govbr-list",
+    item: "govbr-list-item",
+    label: "govbr-list-item-label",
+    locator: "govbr-list-item-locator"
   }
 };
 

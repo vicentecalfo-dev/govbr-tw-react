@@ -26,13 +26,13 @@ const Switch: FC<SwitchProps> = forwardRef(
       <label
         className={cn(
           labelSwitchVariants({ labelPosition }),
-          BASE_CLASSNAMES.switch.root
+          BASE_CLASSNAMES.switch.label
         )}
         htmlFor={id}
       >
         <input
           type="checkbox"
-          className="sr-only peer"
+          className={cn("sr-only peer", BASE_CLASSNAMES.switch.root)}
           role="switch"
           aria-checked={props.checked}
           ref={ref}

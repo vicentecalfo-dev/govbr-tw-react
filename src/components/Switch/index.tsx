@@ -1,4 +1,4 @@
-import { cn } from "@/src/libs/utils";
+import { cn, getUIDClassName } from "@/src/libs/utils";
 import { ComponentProps, FC, forwardRef } from "react";
 import switchVariants from "./variants";
 import labelSwitchVariants from "./label-variants";
@@ -11,26 +11,33 @@ interface SwitchProps
 
 const Switch: FC<SwitchProps> = forwardRef(
   (
-    { className, children, variant = "default", density = "default", labelPosition = "left", ...props },
+    {
+      className,
+      children,
+      variant = "default",
+      density = "default",
+      labelPosition = "left",
+      id = `${BASE_CLASSNAMES.switch.label}-${getUIDClassName()}`,
+      ...props
+    },
     ref
   ) => {
     return (
       <span className={cn(BASE_CLASSNAMES.switch.root)}>
-        <label className={cn(labelSwitchVariants({labelPosition}))}>
+        <label
+          className={cn(labelSwitchVariants({ labelPosition }))}
+          htmlFor={id}
+        >
           <input
             type="checkbox"
             className="sr-only peer"
             role="switch"
             aria-checked={props.checked}
             ref={ref}
+            id={id}
             {...props}
           />
-          <div
-            className={cn(
-              switchVariants({ variant, density }),
-              
-            )}
-          ></div>
+          <div className={cn(switchVariants({ variant, density }))}></div>
           {children}
         </label>
       </span>

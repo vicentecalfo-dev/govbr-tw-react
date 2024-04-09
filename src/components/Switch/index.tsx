@@ -23,24 +23,25 @@ const Switch: FC<SwitchProps> = forwardRef(
     ref
   ) => {
     return (
-      <span className={cn(BASE_CLASSNAMES.switch.root)}>
-        <label
-          className={cn(labelSwitchVariants({ labelPosition }))}
-          htmlFor={id}
-        >
-          <input
-            type="checkbox"
-            className="sr-only peer"
-            role="switch"
-            aria-checked={props.checked}
-            ref={ref}
-            id={id}
-            {...props}
-          />
-          <div className={cn(switchVariants({ variant, density }))}></div>
-          {children}
-        </label>
-      </span>
+      <label
+        className={cn(
+          labelSwitchVariants({ labelPosition }),
+          BASE_CLASSNAMES.switch.root
+        )}
+        htmlFor={id}
+      >
+        <input
+          type="checkbox"
+          className="sr-only peer"
+          role="switch"
+          aria-checked={props.checked}
+          ref={ref}
+          id={id}
+          {...props}
+        />
+        <div className={cn(switchVariants({ variant, density }))}></div>
+        {children}
+      </label>
     );
   }
 );

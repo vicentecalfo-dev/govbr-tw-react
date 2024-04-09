@@ -83,7 +83,8 @@ const BASE_CLASSNAMES: any = {
     locator: "govbr-list-item-locator"
   },
   switch:{
-    root: "govbr-switch"
+    root: "govbr-switch",
+    label: "govbr-switch-label"
   }
 };
 

@@ -1,4 +1,10 @@
 {
+  "name": "govbr-tw-react",
+  "version": "1.0.0",
+  "description": "Biblioteca de componentes React usando Tailwind CSS que implementa o Padrão Digital de Governo.",
+  "main": "dist/index.js",
+  "author": "Vicente Calfo <vicentecalfo.dev@gmail.com>",
+  "license": "ISC",
   "devDependencies": {
     "@chromatic-com/storybook": "^1.2.25",
     "@storybook/addon-essentials": "^8.0.4",
@@ -21,7 +27,9 @@
   },
   "scripts": {
     "storybook": "storybook dev -p 6006 --debug-webpack",
-    "build-storybook": "storybook build"
+    "build-storybook": "storybook build",
+    "build": "tsc",
+    "prepare": "npm run build"
   },
   "dependencies": {
     "@fortawesome/free-solid-svg-icons": "^6.5.1",
@@ -29,5 +37,11 @@
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.0",
     "tailwind-merge": "^2.2.2"
-  }
+  },
+  "keywords": [
+    "react",
+    "design system",
+    "components",
+    "govbr"
+  ]
 }

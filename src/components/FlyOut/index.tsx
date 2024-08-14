@@ -1,8 +1,8 @@
-import BASE_CLASSNAMES from "@/src/config/baseClassNames";
-import { cn, getUIDClassName } from "@/src/libs/utils";
 import { ComponentProps, FC, createContext, useContext, useState } from "react";
 import flyoutContentVariants from "./variants";
 import { VariantProps } from "class-variance-authority";
+import BASE_CLASSNAMES from "../../config/baseClassNames";
+import { cn, getUIDClassName } from "../../libs/utils";
 
 const FlyOutContext = createContext({});
 

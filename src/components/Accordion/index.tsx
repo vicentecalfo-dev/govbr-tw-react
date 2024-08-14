@@ -1,5 +1,4 @@
-import BASE_CLASSNAMES from "@/src/config/baseClassNames";
-import { getUIDClassName, cn } from "@/src/libs/utils";
+
 import React, { createContext, useContext, useEffect, useState } from "react";
 import { ComponentProps, FC, useRef } from "react";
 import accordionVariants from "./variants";
@@ -11,6 +10,8 @@ import {
   faChevronDown,
   faChevronUp,
 } from "@fortawesome/free-solid-svg-icons";
+import BASE_CLASSNAMES from "../../config/baseClassNames";
+import { cn, getUIDClassName } from "../../libs/utils";
 
 interface AccordionProps
   extends ComponentProps<"ul">,

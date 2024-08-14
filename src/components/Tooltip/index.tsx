@@ -1,9 +1,9 @@
 import { ComponentProps, FC, useRef } from "react";
 import tooltipVariants from "./variants";
 import { VariantProps } from "class-variance-authority";
-import { cn, getUIDClassName } from "@/src/libs/utils";
-import BASE_CLASSNAMES from "@/src/config/baseClassNames";
 import React from "react";
+import BASE_CLASSNAMES from "../../config/baseClassNames";
+import { cn, getUIDClassName } from "../../libs/utils";
 
 interface TooltipProps
   extends ComponentProps<"span">,

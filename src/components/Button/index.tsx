@@ -1,8 +1,8 @@
 import { ComponentProps, FC } from "react";
 import { VariantProps } from "class-variance-authority";
-import { cn } from "@/src/libs/utils";
 import buttonVariants from "./variants";
-import BASE_CLASSNAMES from "@/src/config/baseClassNames";
+import BASE_CLASSNAMES from "../../config/baseClassNames";
+import { cn } from "../../libs/utils";
 
 interface ButtonProps
   extends ComponentProps<"button">,

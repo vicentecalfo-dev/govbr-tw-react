@@ -1,10 +1,9 @@
-import { cn } from "@/src/libs/utils";
 import { ComponentProps, FC } from "react";
 import featuredTitleVariants from "./variants";
 import featuredTitleDivisorVariants from "./divisor-variants";
-
 import { VariantProps } from "class-variance-authority";
-import BASE_CLASSNAMES from "@/src/config/baseClassNames";
+import BASE_CLASSNAMES from "../../config/baseClassNames";
+import { cn } from "../../libs/utils";
 
 interface FeaturedTitleProps
   extends ComponentProps<"header">,

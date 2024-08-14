@@ -1,5 +1,3 @@
-import BASE_CLASSNAMES from "@/src/config/baseClassNames";
-import { cn } from "@/src/libs/utils";
 import { VariantProps } from "class-variance-authority";
 import messageVariants from "./variants";
 import iconVariants from "./icon-variants";
@@ -15,6 +13,8 @@ import {
   faXmark,
 } from "@fortawesome/free-solid-svg-icons";
 import { Button } from "../Button";
+import BASE_CLASSNAMES from "../../config/baseClassNames";
+import { cn } from "../../libs/utils";
 
 interface MessagesProps
   extends ComponentProps<"span">,

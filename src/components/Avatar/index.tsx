@@ -1,8 +1,9 @@
 import { VariantProps } from "class-variance-authority";
 import { ComponentProps, FC } from "react";
 import avatarVariants from "./variants";
-import { cn } from "@/src/libs/utils";
 import BASE_CLASSNAMES from "../../config/baseClassNames";
+import { cn } from "../../libs/utils";
+
 
 interface AvatarProps
   extends ComponentProps<"span">,

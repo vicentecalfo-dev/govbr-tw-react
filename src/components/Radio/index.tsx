@@ -2,8 +2,8 @@ import { VariantProps } from "class-variance-authority";
 import { ComponentProps, FC, forwardRef } from "react";
 import radioVariants from "./variants";
 import labelVariant from "./label-variants";
-import { cn, getUIDClassName } from "@/src/libs/utils";
-import BASE_CLASSNAMES from "@/src/config/baseClassNames";
+import BASE_CLASSNAMES from "../../config/baseClassNames";
+import { cn, getUIDClassName } from "../../libs/utils";
 
 interface RadioProps
   extends ComponentProps<"input">,

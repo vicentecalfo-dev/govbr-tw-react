@@ -1,8 +1,8 @@
-import BASE_CLASSNAMES from "@/src/config/baseClassNames";
-import { cn } from "@/src/libs/utils";
 import { VariantProps } from "class-variance-authority";
 import govbrLogoVariants from "./variants";
 import { ComponentProps, FC } from "react";
+import BASE_CLASSNAMES from "../../config/baseClassNames";
+import { cn } from "../../libs/utils";
 
 interface GovBRLogoProps
   extends ComponentProps<"svg">,

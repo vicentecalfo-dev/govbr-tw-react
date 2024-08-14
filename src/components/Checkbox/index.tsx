@@ -3,10 +3,10 @@ import { ComponentProps, FC, forwardRef } from "react";
 import checkboxVariants from "./variants";
 import labelVariant from "./label-variants";
 import iconVariant from "./icon-variants";
-import { cn, getUIDClassName } from "@/src/libs/utils";
-import BASE_CLASSNAMES from "@/src/config/baseClassNames";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { IconDefinition, faCheck } from "@fortawesome/free-solid-svg-icons";
+import BASE_CLASSNAMES from "../../config/baseClassNames";
+import { cn, getUIDClassName } from "../../libs/utils";
 
 interface CheckboxProps
   extends ComponentProps<"input">,

@@ -4,9 +4,10 @@ import dialogContentVariants from "./content-variants";
 import dialogInnerContentVariants from "./inner-content-variants";
 import dialogHeaderVariants from "./header-variants";
 import dialogFooterVariants from "./footer-variants";
-import { cn } from "@/src/libs/utils";
 import { VariantProps } from "class-variance-authority";
-import BASE_CLASSNAMES from "@/src/config/baseClassNames";
+import BASE_CLASSNAMES from "../../config/baseClassNames";
+import { cn } from "../../libs/utils";
+
 
 interface DialogProps
   extends ComponentProps<"dialog">,

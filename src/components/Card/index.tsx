@@ -1,5 +1,5 @@
-import BASE_CLASSNAMES from "@/src/config/baseClassNames";
-import { cn } from "@/src/libs/utils";
+import BASE_CLASSNAMES from "../../config/baseClassNames";
+import { cn } from "../../libs/utils";
 import { ComponentProps, FC } from "react";
 
 interface CardProps extends ComponentProps<"div"> {

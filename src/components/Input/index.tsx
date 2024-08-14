@@ -3,9 +3,9 @@ import inputVariants from "./variants";
 import inputHintVariants from "./hint-variants";
 import inputIconVariants from "./icon-variants";
 import { VariantProps } from "class-variance-authority";
-import { cn } from "@/src/libs/utils";
-import BASE_CLASSNAMES from "@/src/config/baseClassNames";
 import React from "react";
+import BASE_CLASSNAMES from "../../config/baseClassNames";
+import { cn } from "../../libs/utils";
 
 interface InputProps
   extends ComponentProps<"input">,

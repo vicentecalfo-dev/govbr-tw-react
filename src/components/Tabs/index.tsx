@@ -1,4 +1,3 @@
-import { cn, getUIDClassName } from "@/src/libs/utils";
 import { VariantProps } from "class-variance-authority";
 import {
   ComponentProps,
@@ -11,7 +10,8 @@ import tabButtonGroupVariants from "./button-group-variants";
 import tabButtonVariants from "./button-variants";
 import tabContentVariants from "./content-variants";
 import React from "react";
-import BASE_CLASSNAMES from "@/src/config/baseClassNames";
+import BASE_CLASSNAMES from "../../config/baseClassNames";
+import { cn, getUIDClassName } from "../../libs/utils";
 
 interface TabsProps
   extends ComponentProps<"div">,

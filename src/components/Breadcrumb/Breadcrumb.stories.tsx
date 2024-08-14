@@ -2,7 +2,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Breadcrumb from ".";
 import { Button, buttonVariants } from "../Button";
 import { faHouse } from "@fortawesome/free-solid-svg-icons";
-import { cn } from "@/src/libs/utils";
+import { cn } from "../../libs/utils";
 
 export default {
   component: Breadcrumb,

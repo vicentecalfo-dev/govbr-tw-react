@@ -1,5 +1,7 @@
 import { useState } from "react";
 import NativeSelect from ".";
+import { v4 as uuidv4 } from "uuid";
+import React from "react";
 
 export default {
   component: NativeSelect,
@@ -21,15 +23,9 @@ const mockOptions = [
   },
 ];
 
-export const Default = () => (
-  <>
-    <NativeSelect options={mockOptions} />
-    <NativeSelect options={mockOptions} selected="ts" />
-  </>
-);
 
-export const ControlState = () => {
-  const [selected, setSelected] = useState();
+export const Default = () => {
+  const [selected, setSelected] = useState("ts");
 
   function handleOnChange(event: any) {
     setSelected(event.target.value);
@@ -37,7 +33,7 @@ export const ControlState = () => {
 
   return (
     <>
-      <NativeSelect options={mockOptions} onChange={handleOnChange} selected={selected}/>
+      <NativeSelect options={mockOptions} onChange={handleOnChange} value={selected}/>
     </>
   );
 };

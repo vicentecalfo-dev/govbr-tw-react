@@ -5,6 +5,8 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import Tabs from ".";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import React from "react";
+import { v4 as uuidv4 } from "uuid";
 
 export default {
   component: Tabs,

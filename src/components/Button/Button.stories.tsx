@@ -2,6 +2,8 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Button } from ".";
 import { faArrowsRotate, faCheck, faExclamation, faHouse, faTrash, faUser } from "@fortawesome/free-solid-svg-icons";
 import { Spinner } from "../Spinner";
+import React from "react";
+import { v4 as uuidv4 } from "uuid";
 
 export default {
     component: Button,

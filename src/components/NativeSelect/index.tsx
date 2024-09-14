@@ -5,6 +5,7 @@ import { ComponentProps, FC, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faChevronDown } from "@fortawesome/free-solid-svg-icons";
 import BASE_CLASSNAMES from "../../config/baseClassNames";
+import { v4 as uuidv4 } from "uuid";
 import { cn } from "../../libs/utils";
 
 interface NativeSelectProps
@@ -33,22 +34,16 @@ const NativeSelect: FC<NativeSelectProps> = ({
   density = "default",
   ...props
 }) => {
-
   return (
     <div className="relative flex items-center">
       <select
-        id="countries"
-        className={cn(selectVariants({ variant, density }))}
+        className={cn(selectVariants({ variant, density }), className)}
+        value={selected}
         {...props}
       >
-        <option selected={selected === "" ? true : false}>
-          {firstOption}
-        </option>
+        <option>{firstOption}</option>
         {options.map((item) => (
-          <option
-            value={item[mapTo.value]}
-            selected={item[mapTo.value] === selected}
-          >
+          <option value={item[mapTo.value]} key={uuidv4()}>
             {item[mapTo.label]}
           </option>
         ))}

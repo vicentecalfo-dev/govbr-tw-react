@@ -13,6 +13,8 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import Tooltip from "../Tooltip";
 import { useState } from "react";
+import React from "react";
+import { v4 as uuidv4 } from "uuid";
 
 export default {
   component: FlyOut,

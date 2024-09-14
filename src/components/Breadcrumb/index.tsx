@@ -8,6 +8,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faChevronRight } from "@fortawesome/free-solid-svg-icons";
 import BASE_CLASSNAMES from "../../config/baseClassNames";
 import { cn } from "../../libs/utils";
+import { v4 as uuidv4 } from "uuid";
 
 interface BreadcrumbProps
   extends ComponentProps<"nav">,
@@ -31,7 +32,7 @@ const Breadcrumb: FC<BreadcrumbProps> = ({
     >
       {navItems.map((navItem, index) => {
         return (
-          <>
+          <span key={uuidv4()}>
             <span
               className={cn(
                 itemBreadcrumbVariants({ variant }),
@@ -48,7 +49,7 @@ const Breadcrumb: FC<BreadcrumbProps> = ({
             ) : (
               ""
             )}
-          </>
+          </span>
         );
       })}
     </nav>

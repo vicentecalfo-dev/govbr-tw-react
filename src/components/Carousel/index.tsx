@@ -25,6 +25,7 @@ const Carousel: FC<CarouselProps> = ({
   height = "h-full",
   width = "w-full",
   variant = "light",
+  ...props
 }) => {
   const childrenArray = React.Children.toArray(children);
   const [slide, setSlide] = useState(0);
@@ -44,6 +45,7 @@ const Carousel: FC<CarouselProps> = ({
         "grid grid-rows-[1fr] p-3",
         className
       )}
+      {...props}
     >
       <div
         className={cn(

@@ -4,11 +4,13 @@ import Badge from "./components/Badge";
 import Breadcrumb from "./components/Breadcrumb";
 import { Button } from "./components/Button";
 import Card from "./components/Card";
+import { Carousel } from "./components/Carousel";
 import Checkbox from "./components/Checkbox";
 import Dialog from "./components/Dialog";
 import FeaturedTitle from "./components/FeaturedTitle";
 import FlyOut from "./components/FlyOut";
 import { GovBRLogo } from "./components/GovBRLogo";
+import { GovLogo } from "./components/GovLogo";
 import Input from "./components/Input";
 import List from "./components/List";
 import Message from "./components/Message";
@@ -41,5 +43,7 @@ export {
     Status,
     Switch,
     Tabs,
-    Tooltip
+    Tooltip,
+    Carousel,
+    GovLogo
 }

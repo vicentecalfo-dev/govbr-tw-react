@@ -11,6 +11,9 @@ const BASE_CLASSNAMES: any = {
   govbrLogo: {
     root: "govbr-logo",
   },
+  govLogo: {
+    root: "gov-logo",
+  },
   tooltip: {
     root: "govbr-tooltip",
     content: "govbr-tooltip-content",
@@ -85,6 +88,11 @@ const BASE_CLASSNAMES: any = {
   switch:{
     root: "govbr-switch",
     label: "govbr-switch-label"
+  },
+  carousel:{
+    root: "govbr-carousel",
+    holder: "govbr-carousel-holder",
+    item: "govbr-carousel-item"
   }
 };
 

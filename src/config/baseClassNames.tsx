@@ -14,6 +14,9 @@ const BASE_CLASSNAMES: any = {
   govLogo: {
     root: "gov-logo",
   },
+  header: {
+    root: "govbr-header",
+  },
   tooltip: {
     root: "govbr-tooltip",
     content: "govbr-tooltip-content",
@@ -93,6 +96,9 @@ const BASE_CLASSNAMES: any = {
     root: "govbr-carousel",
     holder: "govbr-carousel-holder",
     item: "govbr-carousel-item"
+  },
+  multiComboBox:{
+    root: "govbr-multiComboBox"
   }
 };
 

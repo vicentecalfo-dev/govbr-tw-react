@@ -5,12 +5,12 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { cn, getUIDClassName } from "../../libs/utils";
 import {
   faBars,
-  faChevronDown,
   faChevronRight,
   faMagnifyingGlass,
   faUser,
   faXmark,
 } from "@fortawesome/free-solid-svg-icons";
+import BASE_CLASSNAMES from "../../config/baseClassNames";
 import Input from "../Input";
 
 interface MenuItem {
@@ -64,7 +64,7 @@ const Header = ({
 
   return (
     <>
-      <header className="grid grid-rows-[auto_auto] w-full gap-6 py-6">
+      <header className={cn("grid grid-rows-[auto_auto] w-full gap-6 py-6", BASE_CLASSNAMES.header.root)}>
         <div className="flex gap-3  items-center">
           <div className="flex gap-6 items-center">
             <div className="w-[110px]">

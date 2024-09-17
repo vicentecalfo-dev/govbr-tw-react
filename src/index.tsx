@@ -11,6 +11,7 @@ import FeaturedTitle from "./components/FeaturedTitle";
 import FlyOut from "./components/FlyOut";
 import { GovBRLogo } from "./components/GovBRLogo";
 import { GovLogo } from "./components/GovLogo";
+import { Header } from "./components/Header";
 import Input from "./components/Input";
 import List from "./components/List";
 import Message from "./components/Message";
@@ -45,5 +46,6 @@ export {
     Tabs,
     Tooltip,
     Carousel,
-    GovLogo
+    GovLogo,
+    Header
 }

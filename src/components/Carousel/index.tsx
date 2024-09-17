@@ -4,8 +4,8 @@ import carouselIndicatorActive from "./variants-indicator-active";
 import carouselIndicatorDefault from "./variants-indicator-default";
 import { ComponentProps, FC, useState } from "react";
 import React from "react";
-import { cn } from "@/src/libs/utils";
-import BASE_CLASSNAMES from "@/src/config/baseClassNames";
+import { cn } from "../../libs/utils";
+import BASE_CLASSNAMES from "../../config/baseClassNames";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faChevronLeft,

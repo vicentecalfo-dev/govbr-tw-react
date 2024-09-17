@@ -34,3 +34,11 @@ export const CustomPages = () => (
         <MultiComboBox options={options} onChange={(selectedOptions) => console.log(selectedOptions)} pageSize={3} />
     </>
 );
+
+export const SortOrder = () => (
+    <div className="flex gap-12">
+        <MultiComboBox options={options} onChange={(selectedOptions) => console.log(selectedOptions)} sortOrder="asc"/>
+
+        <MultiComboBox options={options} onChange={(selectedOptions) => console.log(selectedOptions)}  sortOrder="desc"/>
+    </div>
+);

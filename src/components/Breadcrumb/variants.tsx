@@ -1,6 +1,6 @@
 import { cva } from "class-variance-authority";
 
-const variants = cva("inline-flex items-center gap-6", {
+const variants = cva("inline-flex items-center", {
   variants: {
     variant: {
       default: "text-govbr-pure-100",

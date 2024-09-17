@@ -42,10 +42,12 @@ const Breadcrumb: FC<BreadcrumbProps> = ({
               {navItem}
             </span>
             {index < navItems.length - 1 ? (
-              <FontAwesomeIcon
-                icon={faChevronRight}
-                className={cn(iconBreadcrumbVariants({ variant }))}
-              />
+              <span className="mx-3">
+                <FontAwesomeIcon
+                  icon={faChevronRight}
+                  className={cn(iconBreadcrumbVariants({ variant }))}
+                />
+              </span>
             ) : (
               ""
             )}

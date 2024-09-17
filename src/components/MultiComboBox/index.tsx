@@ -21,6 +21,8 @@ interface MultiComboBoxProps extends ComponentProps<"div"> {
   onChange?: any;
   values?: any[];
   noOptionFoundLabel?:string;
+  sortOrder?: "asc" | "desc" | "none";
+  filterPlaceholder?: string;
 }
 
 const MultiComboBox: FC<MultiComboBoxProps> = ({
@@ -32,6 +34,8 @@ const MultiComboBox: FC<MultiComboBoxProps> = ({
   onChange = () => [],
   noOptionFoundLabel = "Nenhuma opção encontrada",
   values = [],
+  sortOrder = 'none',
+  filterPlaceholder="Filtrar ...",
   ...props
 }) => {
   const [filter, setFilter] = useState("");
@@ -46,6 +50,13 @@ const MultiComboBox: FC<MultiComboBoxProps> = ({
   const filteredOptions = options.filter((option) =>
     option.label.toLowerCase().includes(filter.toLowerCase())
   );
+
+  if (sortOrder !== "none") {
+    filteredOptions.sort((a, b) => {
+      const comparison = a.label.localeCompare(b.label);
+      return sortOrder === "asc" ? comparison : -comparison;
+    });
+  }
 
   const totalPages = Math.ceil(filteredOptions.length / pageSize);
 
@@ -108,7 +119,7 @@ const MultiComboBox: FC<MultiComboBoxProps> = ({
     >
       <div className="flex gap-2">
         <Input
-          placeholder="Filtro ..."
+          placeholder={filterPlaceholder}
           type="text"
           iconPosition="both"
           value={filter}

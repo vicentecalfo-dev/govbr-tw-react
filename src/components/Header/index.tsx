@@ -17,16 +17,15 @@ interface MenuItem {
   title?: string;
   link?: string;
   subLinks?: MenuItem[];
-  type?: string
+  type?: string;
 }
 
 interface HeaderProps extends ComponentProps<"header"> {
-  locator?: string;
+  locator?: string[];
   headerTitle?: string;
   login?: boolean;
   loginLabel?: string;
-  onChangeSearchInput?: any;
-  onSubmitSearchInput?: any;
+  searchInput?: any;
   menu?: MenuItem[];
 }
 
@@ -36,11 +35,9 @@ const Header = ({
   headerTitle,
   login = true,
   loginLabel = "Entrar com gov.br",
-  onChangeSearchInput,
-  onSubmitSearchInput,
+  searchInput,
   menu = [],
 }: HeaderProps) => {
-  const [searchValue, setSearchValue] = useState("");
   const [menuVisibility, setMenuVisibility] = useState(false);
 
   // Estado para rastrear item selecionado e sublink selecionado
@@ -51,12 +48,6 @@ const Header = ({
     number | null
   >(null);
 
-  function handleOnChangeSearchInput(event: any) {
-    const value = event.target.value;
-    onChangeSearchInput(value);
-    setSearchValue(value);
-  }
-
   function handleMenuMouseLeave() {
     setSelectedMenuIndex(null);
     setSelectedSubMenuIndex(null);
@@ -64,24 +55,36 @@ const Header = ({
 
   return (
     <>
-      <header className={cn("grid grid-rows-[auto_auto] w-full gap-6 py-6", BASE_CLASSNAMES.header.root)}>
+      <header
+        className={cn(
+          "grid grid-rows-[auto_auto] w-full gap-6 py-6",
+          BASE_CLASSNAMES.header.root
+        )}
+      >
         <div className="flex gap-3  items-center">
           <div className="flex gap-6 items-center">
             <div className="w-[110px]">
               <GovBRLogo />
             </div>
-            {locator && (
-              <h1 className="text-xs text-govbr-gray-80 max-w-[200px]">
-                {locator}
-              </h1>
-            )}
+            <div className="grid gap-1">
+              {locator && (
+                <h1 className="text-sm text-govbr-gray-80 max-w-[300px]">
+                  {locator[0]}
+                </h1>
+              )}
+              {locator && locator[1] && (
+                <h2 className="text-xs text-govbr-gray-60 max-w-[300px]">
+                  {locator[1]}
+                </h2>
+              )}
+            </div>
           </div>
 
           <div className="flex-1"></div>
           {children}
           {login && (
             <div>
-              <Button>
+              <Button className="break-normal">
                 <FontAwesomeIcon icon={faUser} />
                 {loginLabel}
               </Button>
@@ -89,7 +92,7 @@ const Header = ({
           )}
         </div>
         <div className="flex gap-6">
-          <div className="ml-[-10px] flex gap-2 items-center w-3/4">
+          <div className="ml-[-10px] flex gap-2 items-center w-3/5">
             <Button
               variant="ghost"
               size="icon"
@@ -103,27 +106,7 @@ const Header = ({
               </h1>
             )}
           </div>
-          <div className="w-1/4">
-            <Input
-              placeholder="O que você procura?"
-              type="text"
-              iconPosition="right"
-              variant="featured"
-              density="lowest"
-              className="w-full"
-              value={searchValue}
-              onChange={handleOnChangeSearchInput}
-            >
-              <Button
-                size="icon"
-                variant="ghost"
-                density="high"
-                onClick={() => onSubmitSearchInput(searchValue)}
-              >
-                <FontAwesomeIcon icon={faMagnifyingGlass} />
-              </Button>
-            </Input>
-          </div>
+          <div className="w-2/5">{searchInput}</div>
         </div>
       </header>
       <div className="relative">
@@ -134,47 +117,62 @@ const Header = ({
           >
             {/* Primeira coluna: Menu principal */}
             <ul className="bg-transparent w-1/3">
-              {menu.map(({ title, link, subLinks, type }, index) => type? <li className=" py-6">
-                <hr className="border-t border-govbr-gray-20"/>
-              </li>:(
-                <li key={index}>
-                  <a
-                    href={link}
-                    className={cn("flex gap-3 p-3 text-govbr-gray-60 hover:bg-govbr-blue-warm-vivid-80 hover:text-govbr-pure-0", selectedMenuIndex === index ? `!bg-govbr-blue-warm-vivid-80 !text-govbr-pure-0`: "")}
-                    onMouseEnter={() => setSelectedMenuIndex(index)} // Rastreia qual item de menu está selecionado
-                  >
-                    <span className="flex-1">{title}</span>
-                    {subLinks && (
-                      <span>
-                        <FontAwesomeIcon icon={faChevronRight} />
-                      </span>
-                    )}
-                  </a>
-                </li>
-              ))}
-            </ul>
-
-            {/* Segunda coluna: Submenu (se houver) */}
-            {selectedMenuIndex !== null && menu[selectedMenuIndex]?.subLinks && (
-              <ul className="bg-govbr-pure-0/50 w-1/3 border-l border-govbr-gray-20">
-                {menu[selectedMenuIndex]?.subLinks!.map((subLink, index) => (
+              {menu.map(({ title, link, subLinks, type }, index) =>
+                type ? (
+                  <li className=" py-6">
+                    <hr className="border-t border-govbr-gray-20" />
+                  </li>
+                ) : (
                   <li key={index}>
                     <a
-                      href={subLink.link}
-                      className={cn("flex gap-3 p-3 text-govbr-gray-60 hover:bg-govbr-blue-warm-vivid-70 hover:text-govbr-pure-0", selectedSubMenuIndex === index ? `!bg-govbr-blue-warm-vivid-70 !text-govbr-pure-0`: "")}
-                      onMouseEnter={() => setSelectedSubMenuIndex(index)} // Rastreia qual sublink está selecionado
+                      href={link}
+                      className={cn(
+                        "flex gap-3 p-3 text-govbr-gray-60 hover:bg-govbr-blue-warm-vivid-80 hover:text-govbr-pure-0",
+                        selectedMenuIndex === index
+                          ? `!bg-govbr-blue-warm-vivid-80 !text-govbr-pure-0`
+                          : ""
+                      )}
+                      onMouseEnter={() => setSelectedMenuIndex(index)} // Rastreia qual item de menu está selecionado
                     >
-                      <span className="flex-1">{subLink?.title}</span>
-                      {subLink?.subLinks && (
+                      <span className="flex-1">{title}</span>
+                      {subLinks && (
                         <span>
                           <FontAwesomeIcon icon={faChevronRight} />
                         </span>
                       )}
                     </a>
                   </li>
-                ))}
-              </ul>
-            )}
+                )
+              )}
+            </ul>
+
+            {/* Segunda coluna: Submenu (se houver) */}
+            {selectedMenuIndex !== null &&
+              menu[selectedMenuIndex]?.subLinks && (
+                <ul className="bg-govbr-pure-0/50 w-1/3 border-l border-govbr-gray-20">
+                  {menu[selectedMenuIndex]?.subLinks!.map((subLink, index) => (
+                    <li key={index}>
+                      <a
+                        href={subLink.link}
+                        className={cn(
+                          "flex gap-3 p-3 text-govbr-gray-60 hover:bg-govbr-blue-warm-vivid-70 hover:text-govbr-pure-0",
+                          selectedSubMenuIndex === index
+                            ? `!bg-govbr-blue-warm-vivid-70 !text-govbr-pure-0`
+                            : ""
+                        )}
+                        onMouseEnter={() => setSelectedSubMenuIndex(index)} // Rastreia qual sublink está selecionado
+                      >
+                        <span className="flex-1">{subLink?.title}</span>
+                        {subLink?.subLinks && (
+                          <span>
+                            <FontAwesomeIcon icon={faChevronRight} />
+                          </span>
+                        )}
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              )}
 
             {/* Terceira coluna: Submenu do submenu (se houver) */}
             {selectedMenuIndex !== null &&

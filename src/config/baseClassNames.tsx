@@ -100,6 +100,12 @@ const BASE_CLASSNAMES: any = {
     holder: "govbr-carousel-holder",
     item: "govbr-carousel-item"
   },
+  carouselSlider:{
+    root: "govbr-carousel-slider",
+    viewport: "govbr-carousel-slider-viewport",
+    slide: "govbr-carousel-slider-slide",
+    dots: "govbr-carousel-slider-dots"
+  },
   calendar:{
     root: "govbr-calendar",
     header: "govbr-calendar-header",

@@ -4,6 +4,7 @@ import Badge from "./components/Badge";
 import Breadcrumb from "./components/Breadcrumb";
 import { Button } from "./components/Button";
 import { ButtonGroup } from "./components/ButtonGroup";
+import CarouselSlider from "./components/CarouselSlider";
 import Card from "./components/Card";
 import { Carousel } from "./components/Carousel";
 import Checkbox from "./components/Checkbox";
@@ -32,6 +33,7 @@ export {
     Breadcrumb,
     Button,
     ButtonGroup,
+    CarouselSlider,
     Card,
     Checkbox,
     Dialog,

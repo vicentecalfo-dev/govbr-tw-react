@@ -1,4 +1,4 @@
-const BASE_CLASSNAMES: any = {
+const BASE_CLASSNAMES: Record<string, Record<string, string>> = {
   avatar: {
     root: "govbr-avatar",
   },
@@ -67,54 +67,61 @@ const BASE_CLASSNAMES: any = {
   },
   status: {
     root: "govbr-badge-status",
-    pulse: "govbr-badge-status-pulse"
+    pulse: "govbr-badge-status-pulse",
   },
-  tabs:{
+  tabs: {
     root: "govbr-tabs",
     tab: "govbr-tab",
-    button:"govbr-tab-button",
-    content:"govbr-tab-content"
+    button: "govbr-tab-button",
+    content: "govbr-tab-content",
   },
-  dialog:{
-    root:"govbr-dialog",
-    content:"govbr-dialog-content"
+  dialog: {
+    root: "govbr-dialog",
+    content: "govbr-dialog-content",
   },
-  featuredTitle:{
-    root: "govbr-featured-title"
+  featuredTitle: {
+    root: "govbr-featured-title",
   },
-  breadcrumb:{
-    root: "govbr-breadcrumb"
+  breadcrumb: {
+    root: "govbr-breadcrumb",
   },
-  list:{
+  list: {
     root: "govbr-list",
     item: "govbr-list-item",
     label: "govbr-list-item-label",
-    locator: "govbr-list-item-locator"
+    locator: "govbr-list-item-locator",
   },
-  switch:{
+  switch: {
     root: "govbr-switch",
-    label: "govbr-switch-label"
+    label: "govbr-switch-label",
   },
-  carousel:{
+  carousel: {
     root: "govbr-carousel",
     holder: "govbr-carousel-holder",
-    item: "govbr-carousel-item"
+    item: "govbr-carousel-item",
   },
-  carouselSlider:{
+  carouselSlider: {
     root: "govbr-carousel-slider",
     viewport: "govbr-carousel-slider-viewport",
     slide: "govbr-carousel-slider-slide",
-    dots: "govbr-carousel-slider-dots"
+    dots: "govbr-carousel-slider-dots",
   },
-  calendar:{
+  item: {
+    root: "govbr-item",
+    icon: "govbr-item-icon",
+    content: "govbr-item-content",
+    meta: "govbr-item-meta",
+    actions: "govbr-item-actions",
+  },
+  calendar: {
     root: "govbr-calendar",
     header: "govbr-calendar-header",
     grid: "govbr-calendar-grid",
-    day: "govbr-calendar-day"
+    day: "govbr-calendar-day",
   },
-  multiComboBox:{
-    root: "govbr-multiComboBox"
-  }
+  multiComboBox: {
+    root: "govbr-multiComboBox",
+  },
 };
 
 export default BASE_CLASSNAMES;

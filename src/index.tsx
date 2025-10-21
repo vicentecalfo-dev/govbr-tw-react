@@ -5,6 +5,7 @@ import Breadcrumb from "./components/Breadcrumb";
 import { Button } from "./components/Button";
 import { ButtonGroup } from "./components/ButtonGroup";
 import CarouselSlider from "./components/CarouselSlider";
+import Item from "./components/Item";
 import Card from "./components/Card";
 import { Carousel } from "./components/Carousel";
 import Checkbox from "./components/Checkbox";
@@ -34,6 +35,7 @@ export {
     Button,
     ButtonGroup,
     CarouselSlider,
+    Item,
     Card,
     Checkbox,
     Dialog,

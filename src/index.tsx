@@ -20,6 +20,23 @@ import List from "./components/List";
 import Message from "./components/Message";
 import NativeSelect from "./components/NativeSelect";
 import Radio from "./components/Radio";
+import {
+    DropdownMenu,
+    DropdownMenuCheckboxItem,
+    DropdownMenuContent,
+    DropdownMenuGroup,
+    DropdownMenuItem,
+    DropdownMenuLabel,
+    DropdownMenuPortal,
+    DropdownMenuRadioGroup,
+    DropdownMenuRadioItem,
+    DropdownMenuSeparator,
+    DropdownMenuShortcut,
+    DropdownMenuSub,
+    DropdownMenuSubContent,
+    DropdownMenuSubTrigger,
+    DropdownMenuTrigger
+} from "./components/DropdownMenu";
 import { Spinner } from "./components/Spinner";
 import Status from "./components/Status";
 import Switch from "./components/Switch";
@@ -39,6 +56,21 @@ export {
     Card,
     Checkbox,
     Dialog,
+    DropdownMenu,
+    DropdownMenuTrigger,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuCheckboxItem,
+    DropdownMenuRadioItem,
+    DropdownMenuLabel,
+    DropdownMenuSeparator,
+    DropdownMenuShortcut,
+    DropdownMenuGroup,
+    DropdownMenuPortal,
+    DropdownMenuRadioGroup,
+    DropdownMenuSub,
+    DropdownMenuSubTrigger,
+    DropdownMenuSubContent,
     FeaturedTitle,
     FlyOut,
     GovBRLogo,

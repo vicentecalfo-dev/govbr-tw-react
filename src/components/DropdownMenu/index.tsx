@@ -43,21 +43,40 @@ type DropdownMenuContentProps = React.ComponentPropsWithoutRef<
 const DropdownMenuContent = React.forwardRef<
   React.ElementRef<typeof DropdownMenuPrimitive.Content>,
   DropdownMenuContentProps
->(({ className, sideOffset = 8, side = "bottom", ...props }, ref) => (
-  <DropdownMenuPrimitive.Portal>
-    <DropdownMenuPrimitive.Content
-      ref={ref}
-      sideOffset={sideOffset}
-      side={side}
-      className={cn(
-        dropdownMenuContentVariants({ side }),
-        BASE_CLASSNAMES.dropdownMenu.content,
-        className
-      )}
-      {...props}
-    />
-  </DropdownMenuPrimitive.Portal>
-));
+>(
+  (
+    {
+      className,
+      sideOffset = 8,
+      side = "bottom",
+      align,
+      avoidCollisions,
+      ...props
+    },
+    ref
+  ) => {
+  const resolvedAlign =
+    align ?? (side === "left" || side === "right" ? "start" : "center");
+    const resolvedAvoidCollisions = avoidCollisions ?? false;
+
+  return (
+    <DropdownMenuPrimitive.Portal>
+      <DropdownMenuPrimitive.Content
+        ref={ref}
+        sideOffset={sideOffset}
+        side={side}
+        align={resolvedAlign}
+          avoidCollisions={resolvedAvoidCollisions}
+        className={cn(
+          dropdownMenuContentVariants({ side }),
+          BASE_CLASSNAMES.dropdownMenu.content,
+          className
+        )}
+        {...props}
+      />
+    </DropdownMenuPrimitive.Portal>
+  );
+});
 DropdownMenuContent.displayName =
   DropdownMenuPrimitive.Content.displayName ?? "DropdownMenuContent";
 

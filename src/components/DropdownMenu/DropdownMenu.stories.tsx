@@ -46,7 +46,7 @@ const MenuExample = ({
   withIcons = false,
 }: DropdownStoryProps) => {
   const [statusBar, setStatusBar] = React.useState(true);
-  const [notifications, setNotifications] = React.useState<"push" | "email" | "none">("push");
+  const [notifications, setNotifications] :any= React.useState<"push" | "email" | "none">("push");
   const resolvedInset = insetItems || withIcons;
 
   const menu = (
@@ -193,7 +193,7 @@ type Story = StoryObj<typeof MenuExample>;
 
 export const Playground: Story = {
   args: {
-    contentSide: "bottom",
+    contentSide: "right",
     subPlacement: "right",
     insetItems: false,
     showSelection: true,

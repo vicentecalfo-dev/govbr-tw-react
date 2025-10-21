@@ -5,6 +5,9 @@ const BASE_CLASSNAMES: any = {
   button: {
     root: "govbr-button",
   },
+  buttonGroup: {
+    root: "govbr-button-group",
+  },
   spinner: {
     root: "govbr-spinner",
   },

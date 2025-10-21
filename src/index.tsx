@@ -3,6 +3,7 @@ import { Avatar } from "./components/Avatar";
 import Badge from "./components/Badge";
 import Breadcrumb from "./components/Breadcrumb";
 import { Button } from "./components/Button";
+import { ButtonGroup } from "./components/ButtonGroup";
 import Card from "./components/Card";
 import { Carousel } from "./components/Carousel";
 import Checkbox from "./components/Checkbox";
@@ -29,6 +30,7 @@ export {
     Badge,
     Breadcrumb,
     Button,
+    ButtonGroup,
     Card,
     Checkbox,
     Dialog,

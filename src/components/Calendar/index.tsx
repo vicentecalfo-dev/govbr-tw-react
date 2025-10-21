@@ -38,6 +38,10 @@ export interface CalendarProps
     start: number;
     end: number;
   };
+  translations?: {
+    weekdaysShort?: string[];
+    months?: string[];
+  };
 }
 
 const toStartOfDay = (date: Date) =>
@@ -95,7 +99,16 @@ const clampToRange = (date: Date, min?: Date, max?: Date) => {
   return date;
 };
 
-const getWeekdayLabels = (locale: string, weekStartsOn: number) => {
+const getWeekdayLabels = (
+  locale: string,
+  weekStartsOn: number,
+  override?: string[]
+) => {
+  if (override && override.length === 7) {
+    return override
+      .slice(weekStartsOn)
+      .concat(override.slice(0, weekStartsOn));
+  }
   const formatter = new Intl.DateTimeFormat(locale, { weekday: "short" });
   const base = new Date(2021, 0, 3); // Sunday
   return Array.from({ length: 7 }).map((_, index) => {
@@ -106,7 +119,10 @@ const getWeekdayLabels = (locale: string, weekStartsOn: number) => {
   });
 };
 
-const getMonthLabels = (locale: string) => {
+const getMonthLabels = (locale: string, override?: string[]) => {
+  if (override && override.length === 12) {
+    return override;
+  }
   const formatter = new Intl.DateTimeFormat(locale, { month: "long" });
   return Array.from({ length: 12 }).map((_, index) => {
     const date = new Date(2021, index, 1);
@@ -130,6 +146,7 @@ const Calendar = forwardRef<HTMLDivElement, CalendarProps>(
       weekStartsOn = 0,
       locale = "pt-BR",
       yearRange,
+      translations,
       ...props
     },
     ref
@@ -211,7 +228,10 @@ const Calendar = forwardRef<HTMLDivElement, CalendarProps>(
       setVisibleMonth((current) => addMonths(current, 1));
     }, [canGoNext]);
 
-    const monthLabels = useMemo(() => getMonthLabels(locale), [locale]);
+    const monthLabels = useMemo(
+      () => getMonthLabels(locale, translations?.months),
+      [locale, translations?.months]
+    );
 
     const currentYear = visibleMonth.getFullYear();
     const years = useMemo(() => {
@@ -230,8 +250,9 @@ const Calendar = forwardRef<HTMLDivElement, CalendarProps>(
     }, [currentYear, yearRange, minDate, maxDate]);
 
     const weekdays = useMemo(
-      () => getWeekdayLabels(locale, weekStartsOn),
-      [locale, weekStartsOn]
+      () =>
+        getWeekdayLabels(locale, weekStartsOn, translations?.weekdaysShort),
+      [locale, weekStartsOn, translations?.weekdaysShort]
     );
 
     const dayMatrix = useMemo<DayMatrixCell[]>(() => {

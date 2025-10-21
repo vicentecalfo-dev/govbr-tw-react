@@ -69,3 +69,32 @@ export const WithDisabledDates = () => {
     />
   );
 };
+
+export const CustomTranslations = () => {
+  const [selected, setSelected] = useState<Date | undefined>(new Date());
+
+  return (
+    <Calendar
+      value={selected}
+      onChange={setSelected}
+      locale="en-US"
+      translations={{
+        weekdaysShort: ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"],
+        months: [
+          "January",
+          "February",
+          "March",
+          "April",
+          "May",
+          "June",
+          "July",
+          "August",
+          "September",
+          "October",
+          "November",
+          "December",
+        ],
+      }}
+    />
+  );
+};

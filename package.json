@@ -4,6 +4,7 @@
   "description": "Biblioteca de componentes React usando Tailwind CSS que implementa o Padrão Digital de Governo.",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
+  "style": "dist/tailwind.css",
   "files": [
     "dist"
   ],
@@ -16,8 +17,8 @@
     "@storybook/addon-links": "^8.0.4",
     "@storybook/addon-onboarding": "^8.0.4",
     "@storybook/addon-webpack5-compiler-swc": "^1.0.2",
+    "@storybook/addon-postcss": "^2.0.0",
     "@storybook/blocks": "^8.0.4",
-    "@storybook/preset-create-react-app": "^8.0.4",
     "@storybook/react": "^8.0.4",
     "@storybook/react-webpack5": "^8.0.4",
     "@storybook/test": "^8.0.4",
@@ -25,6 +26,8 @@
     "react": "^18.2.0",
     "storybook": "^8.0.4",
     "tailwindcss": "^3.4.1",
+    "autoprefixer": "^10.4.19",
+    "postcss-loader": "^7.3.4",
     "tsconfig-paths-webpack-plugin": "^4.1.0",
     "typescript": "^5.4.3",
     "webpack": "^5.91.0"
@@ -32,7 +35,10 @@
   "scripts": {
     "storybook": "storybook dev -p 6006 --debug-webpack",
     "build-storybook": "storybook build",
-    "build": "tsc",
+    "build": "npm run build:types && npm run build:css && npm run copy:fonts",
+    "build:types": "tsc",
+    "build:css": "tailwindcss -i ./src/tailwind.css -o ./dist/tailwind.css --minify",
+    "copy:fonts": "node ./scripts/copy-fonts.js",
     "prepare": "npm run build"
   },
   "dependencies": {

@@ -119,6 +119,11 @@ const BASE_CLASSNAMES: Record<string, Record<string, string>> = {
     slide: "govbr-carousel-slider-slide",
     dots: "govbr-carousel-slider-dots",
   },
+  groupOptions: {
+    root: "govbr-group-options",
+    list: "govbr-group-options-list",
+    footer: "govbr-group-options-footer",
+  },
   item: {
     root: "govbr-item",
     icon: "govbr-item-icon",

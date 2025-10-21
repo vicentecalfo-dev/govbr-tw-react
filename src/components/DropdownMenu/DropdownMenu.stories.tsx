@@ -268,7 +268,7 @@ export const SubmenuWithItems: Story = {
         <DropdownMenuTrigger asChild>
           <Button variant="outline">Acoes</Button>
         </DropdownMenuTrigger>
-        <DropdownMenuContent side="bottom" className="w-52">
+        <DropdownMenuContent side="right" className="w-52">
           <DropdownMenuItem>
             <FontAwesomeIcon
               icon={faPen}
@@ -314,7 +314,7 @@ export const SubmenuWithItems: Story = {
           <DropdownMenuItem className="text-govbr-red-vivid-50">
             <FontAwesomeIcon
               icon={faTrash}
-              className="mr-2 h-4 w-4 text-govbr-blue-warm-vivid-70"
+              className="mr-2 h-4 w-4"
             />
             Excluir
           </DropdownMenuItem>

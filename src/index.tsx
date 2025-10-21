@@ -20,6 +20,7 @@ import List from "./components/List";
 import Message from "./components/Message";
 import NativeSelect from "./components/NativeSelect";
 import Radio from "./components/Radio";
+import GroupOptions from "./components/GroupOptions";
 import {
     DropdownMenu,
     DropdownMenuCheckboxItem,
@@ -79,6 +80,7 @@ export {
     Message,
     NativeSelect,
     Radio,
+    GroupOptions,
     Spinner,
     Status,
     Switch,

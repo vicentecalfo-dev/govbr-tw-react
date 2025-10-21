@@ -100,6 +100,12 @@ const BASE_CLASSNAMES: any = {
     holder: "govbr-carousel-holder",
     item: "govbr-carousel-item"
   },
+  calendar:{
+    root: "govbr-calendar",
+    header: "govbr-calendar-header",
+    grid: "govbr-calendar-grid",
+    day: "govbr-calendar-day"
+  },
   multiComboBox:{
     root: "govbr-multiComboBox"
   }

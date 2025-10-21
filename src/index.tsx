@@ -23,6 +23,7 @@ import Status from "./components/Status";
 import Switch from "./components/Switch";
 import Tabs from "./components/Tabs";
 import Tooltip from "./components/Tooltip";
+import Calendar from "./components/Calendar";
 
 export {
     Accordion,
@@ -49,5 +50,6 @@ export {
     Tooltip,
     Carousel,
     GovLogo,
-    Header
+    Header,
+    Calendar
 }

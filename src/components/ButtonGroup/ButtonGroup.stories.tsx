@@ -64,10 +64,10 @@ export const Separated = () => (
   <div className={wrapper}>
     <ButtonGroup separated className="flex-wrap items-center">
        <ButtonGroup>
-      <Button variant="default-danger">
+      <Button>
         <FontAwesomeIcon icon={faBolt} /> Emergencia
       </Button>
-      <Button variant="outline-danger">Avisar</Button>
+      <Button variant="outline">Avisar</Button>
       </ButtonGroup>
       <ButtonGroup>
         <Button size="icon" variant="ghost-danger">

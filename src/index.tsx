@@ -18,6 +18,7 @@ import { Header } from "./components/Header";
 import Input from "./components/Input";
 import List from "./components/List";
 import Message from "./components/Message";
+import OtpInput from "./components/OtpInput";
 import NativeSelect from "./components/NativeSelect";
 import Radio from "./components/Radio";
 import GroupOptions from "./components/GroupOptions";
@@ -78,6 +79,7 @@ export {
     Input,
     List,
     Message,
+    OtpInput,
     NativeSelect,
     Radio,
     GroupOptions,

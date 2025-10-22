@@ -5,7 +5,7 @@ import { v4 as uuidv4 } from "uuid";
 
 export default {
   component: Switch,
-  title: "Switch",
+  title: "Form/Switch",
 };
 
 export const Default = () => {

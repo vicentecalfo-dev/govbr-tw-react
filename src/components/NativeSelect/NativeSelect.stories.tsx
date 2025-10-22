@@ -5,7 +5,7 @@ import React from "react";
 
 export default {
   component: NativeSelect,
-  title: "Native Select",
+  title: "Form/Native Select",
 };
 
 const mockOptions = [

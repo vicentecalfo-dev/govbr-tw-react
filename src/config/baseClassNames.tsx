@@ -57,6 +57,11 @@ const BASE_CLASSNAMES: Record<string, Record<string, string>> = {
     root: "govbr-input",
     control: "govbr-input-control",
   },
+  otpInput: {
+    root: "govbr-otp-input",
+    slot: "govbr-otp-input-slot",
+    separator: "govbr-otp-input-separator",
+  },
   radio: {
     root: "govbr-input-radio",
     label: "govbr-input-radio-label",

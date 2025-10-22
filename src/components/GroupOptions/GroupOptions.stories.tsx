@@ -6,7 +6,7 @@ import Radio from "../Radio";
 
 export default {
   component: GroupOptions,
-  title: "GroupOptions",
+  title: "Form/GroupOptions",
 };
 
 const options = [

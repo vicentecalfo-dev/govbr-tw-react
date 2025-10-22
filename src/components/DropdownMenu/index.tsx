@@ -16,7 +16,107 @@ import {
   dropdownMenuSubTriggerVariants,
 } from "./variants";
 
-const DropdownMenu = DropdownMenuPrimitive.Root;
+type DropdownMenuTriggerOption = "click" | "rightclick";
+
+interface DropdownMenuInteractionContextValue {
+  openTrigger: DropdownMenuTriggerOption;
+  open: boolean;
+  setOpen: (open: boolean) => void;
+}
+
+const DropdownMenuInteractionContext =
+  React.createContext<DropdownMenuInteractionContextValue | undefined>(undefined);
+
+const useDropdownMenuInteractionContext = () => {
+  return React.useContext(DropdownMenuInteractionContext);
+};
+
+const composeEventHandlers =
+  <E extends React.SyntheticEvent>(
+    theirHandler?: (event: E) => void,
+    ourHandler?: (event: E) => void
+  ) =>
+  (event: E) => {
+    theirHandler?.(event);
+    if (!event.defaultPrevented) {
+      ourHandler?.(event);
+    }
+  };
+
+type DropdownMenuProps = React.ComponentPropsWithoutRef<
+  typeof DropdownMenuPrimitive.Root
+> & {
+  openTrigger?: DropdownMenuTriggerOption;
+};
+
+const DropdownMenu = ({
+  openTrigger = "click",
+  open: controlledOpenProp,
+  defaultOpen,
+  onOpenChange,
+  children,
+  ...props
+}: DropdownMenuProps) => {
+  const isCustomTrigger = openTrigger !== "click";
+  const isControlled = controlledOpenProp !== undefined;
+  const [uncontrolledOpen, setUncontrolledOpen] = React.useState(
+    defaultOpen ?? false
+  );
+  const open = controlledOpenProp ?? uncontrolledOpen;
+
+  const handleOpenChange = React.useCallback(
+    (value: boolean) => {
+      if (!isControlled) {
+        setUncontrolledOpen(value);
+      }
+      onOpenChange?.(value);
+    },
+    [isControlled, onOpenChange]
+  );
+
+  const contextValue = React.useMemo<DropdownMenuInteractionContextValue>(
+    () => ({
+      openTrigger,
+      open,
+      setOpen: handleOpenChange,
+    }),
+    [
+      openTrigger,
+      open,
+      handleOpenChange,
+    ]
+  );
+
+  const rootProps =
+    {
+      ...props,
+    } as React.ComponentPropsWithoutRef<typeof DropdownMenuPrimitive.Root>;
+
+  if (isCustomTrigger) {
+    rootProps.open = open;
+    rootProps.onOpenChange = handleOpenChange;
+  } else {
+    if (isControlled) {
+      rootProps.open = controlledOpenProp;
+    } else if (defaultOpen !== undefined) {
+      rootProps.defaultOpen = defaultOpen;
+    }
+    if (onOpenChange) {
+      rootProps.onOpenChange = onOpenChange;
+    }
+  }
+
+  return (
+    <DropdownMenuInteractionContext.Provider value={contextValue}>
+      <DropdownMenuPrimitive.Root {...rootProps}>
+        {children}
+      </DropdownMenuPrimitive.Root>
+    </DropdownMenuInteractionContext.Provider>
+  );
+};
+DropdownMenu.displayName =
+  DropdownMenuPrimitive.Root.displayName ?? "DropdownMenu";
+
 const DropdownMenuGroup = DropdownMenuPrimitive.Group;
 const DropdownMenuPortal = DropdownMenuPrimitive.Portal;
 const DropdownMenuSub = DropdownMenuPrimitive.Sub;
@@ -25,13 +125,77 @@ const DropdownMenuRadioGroup = DropdownMenuPrimitive.RadioGroup;
 const DropdownMenuTrigger = React.forwardRef<
   React.ElementRef<typeof DropdownMenuPrimitive.Trigger>,
   React.ComponentPropsWithoutRef<typeof DropdownMenuPrimitive.Trigger>
->(({ className, ...props }, ref) => (
-  <DropdownMenuPrimitive.Trigger
-    ref={ref}
-    className={cn(className, BASE_CLASSNAMES.dropdownMenu.trigger)}
-    {...props}
-  />
-));
+>(
+  (
+    {
+      className,
+      onClick,
+      onDoubleClick,
+      onContextMenu,
+      onPointerEnter,
+      onPointerLeave,
+      onFocus,
+      onBlur,
+      ...props
+    },
+    ref
+  ) => {
+    const context = useDropdownMenuInteractionContext();
+
+    if (!context) {
+      return (
+        <DropdownMenuPrimitive.Trigger
+          ref={ref}
+          className={cn(className, BASE_CLASSNAMES.dropdownMenu.trigger)}
+          onClick={onClick}
+          onDoubleClick={onDoubleClick}
+          onContextMenu={onContextMenu}
+          onPointerEnter={onPointerEnter}
+          onPointerLeave={onPointerLeave}
+          onFocus={onFocus}
+          onBlur={onBlur}
+          {...props}
+        />
+      );
+    }
+
+    const { openTrigger, open, setOpen } = context;
+
+    const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+      if (openTrigger === "rightclick") {
+        event.preventDefault();
+      }
+    };
+
+    const handleContextMenu = (event: React.MouseEvent<HTMLButtonElement>) => {
+      if (openTrigger !== "rightclick") {
+        return;
+      }
+      event.preventDefault();
+      if (!open) {
+        setOpen(true);
+      }
+    };
+
+    return (
+      <DropdownMenuPrimitive.Trigger
+        ref={ref}
+        className={cn(className, BASE_CLASSNAMES.dropdownMenu.trigger)}
+        onClick={composeEventHandlers(onClick, handleClick)}
+        onContextMenu={composeEventHandlers(
+          onContextMenu,
+          handleContextMenu
+        )}
+        onDoubleClick={onDoubleClick}
+        onPointerEnter={onPointerEnter}
+        onPointerLeave={onPointerLeave}
+        onFocus={onFocus}
+        onBlur={onBlur}
+        {...props}
+      />
+    );
+  }
+);
 DropdownMenuTrigger.displayName =
   DropdownMenuPrimitive.Trigger.displayName ?? "DropdownMenuTrigger";
 
@@ -55,28 +219,29 @@ const DropdownMenuContent = React.forwardRef<
     },
     ref
   ) => {
-  const resolvedAlign =
-    align ?? (side === "left" || side === "right" ? "start" : "center");
+    const resolvedAlign =
+      align ?? (side === "left" || side === "right" ? "start" : "center");
     const resolvedAvoidCollisions = avoidCollisions ?? false;
 
-  return (
-    <DropdownMenuPrimitive.Portal>
-      <DropdownMenuPrimitive.Content
-        ref={ref}
-        sideOffset={sideOffset}
-        side={side}
-        align={resolvedAlign}
+    return (
+      <DropdownMenuPrimitive.Portal>
+        <DropdownMenuPrimitive.Content
+          ref={ref}
+          sideOffset={sideOffset}
+          side={side}
+          align={resolvedAlign}
           avoidCollisions={resolvedAvoidCollisions}
-        className={cn(
-          dropdownMenuContentVariants({ side }),
-          BASE_CLASSNAMES.dropdownMenu.content,
-          className
-        )}
-        {...props}
-      />
-    </DropdownMenuPrimitive.Portal>
-  );
-});
+          className={cn(
+            dropdownMenuContentVariants({ side }),
+            BASE_CLASSNAMES.dropdownMenu.content,
+            className
+          )}
+          {...props}
+        />
+      </DropdownMenuPrimitive.Portal>
+    );
+  }
+);
 DropdownMenuContent.displayName =
   DropdownMenuPrimitive.Content.displayName ?? "DropdownMenuContent";
 

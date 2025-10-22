@@ -246,6 +246,63 @@ export const SubmenuPlacements: Story = {
   },
 };
 
+const activationTriggers = [
+  {
+    trigger: "click" as const,
+    title: "Clique",
+    helper: "Clique uma vez para abrir",
+  },
+  {
+    trigger: "rightclick" as const,
+    title: "Botao direito",
+    helper: "Use o botao direito para abrir",
+  },
+];
+
+const ActivationExample = ({
+  trigger,
+}: {
+  trigger: "click" | "rightclick";
+}) => (
+  <DropdownMenu openTrigger={trigger}>
+    <DropdownMenuTrigger asChild>
+      <Button variant="outline" className="w-44 justify-between">
+        <span>
+          {trigger === "click" && "Abrir com clique"}
+          {trigger === "rightclick" && "Abrir com botao direito"}
+        </span>
+      </Button>
+    </DropdownMenuTrigger>
+    <DropdownMenuContent className="w-56">
+      <DropdownMenuLabel>Acoes rapidas</DropdownMenuLabel>
+      <DropdownMenuItem>Visualizar detalhes</DropdownMenuItem>
+      <DropdownMenuItem>Duplicar registro</DropdownMenuItem>
+      <DropdownMenuSeparator />
+      <DropdownMenuItem className="text-govbr-red-vivid-50">
+        Excluir
+      </DropdownMenuItem>
+    </DropdownMenuContent>
+  </DropdownMenu>
+);
+
+export const ActivationModes: Story = {
+  render: () => (
+    <div className="flex flex-wrap items-start justify-center gap-6 bg-govbr-gray-2 p-6">
+      {activationTriggers.map(({ trigger, title, helper }) => (
+        <div key={trigger} className="flex w-60 flex-col items-center gap-3">
+          <span className="text-sm font-semibold uppercase text-govbr-gray-70">
+            {title}
+          </span>
+          <ActivationExample trigger={trigger} />
+          <span className="text-xs text-govbr-gray-60 text-center">
+            {helper}
+          </span>
+        </div>
+      ))}
+    </div>
+  ),
+};
+
 export const WithInsetItems: Story = {
   args: {
     contentSide: "bottom",

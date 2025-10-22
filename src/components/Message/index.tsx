@@ -23,6 +23,8 @@ interface MessagesProps
   timer?: number;
   hasIcon?: boolean;
   icon?: any;
+  onClose?: () => void;
+  disableAutoRemove?: boolean;
 }
 
 const Message: FC<MessagesProps> = ({
@@ -33,10 +35,19 @@ const Message: FC<MessagesProps> = ({
   hasIcon = true,
   timer = 5,
   icon = "",
+  onClose,
+  disableAutoRemove = false,
   ...props
 }) => {
   const myRef: any = createRef();
-  const handleDestory = () => myRef.current.remove();
+  const handleDestory = () => {
+    if (typeof onClose === "function") {
+      onClose();
+    }
+    if (!disableAutoRemove && myRef.current) {
+      myRef.current.remove();
+    }
+  };
   const closeButtonVariant: any = {
     info: "ghost",
     danger: "ghost-danger",
@@ -62,7 +73,7 @@ const Message: FC<MessagesProps> = ({
         handleDestory();
       }
     }
-  }, [counter, timer]);
+  }, [counter, timer, closable]);
 
   icon = icon !== "" ? icon : icons[variant as any];
   return (

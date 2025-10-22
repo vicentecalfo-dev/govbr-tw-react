@@ -46,6 +46,7 @@ import Switch from "./components/Switch";
 import Tabs from "./components/Tabs";
 import Tooltip from "./components/Tooltip";
 import Calendar from "./components/Calendar";
+import Toaster from "./components/Toaster";
 
 export {
     Accordion,
@@ -93,5 +94,6 @@ export {
     Carousel,
     GovLogo,
     Header,
-    Calendar
+    Calendar,
+    Toaster
 }

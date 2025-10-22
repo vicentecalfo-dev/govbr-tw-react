@@ -31,6 +31,10 @@ const BASE_CLASSNAMES: Record<string, Record<string, string>> = {
     warning: "govbr-message-warning",
     info: "govbr-message-info",
   },
+  toaster: {
+    root: "govbr-toaster",
+    toast: "govbr-toaster-item",
+  },
   flyout: {
     root: "govbr-flyout",
     toggle: "govbr-flyout-toggle",

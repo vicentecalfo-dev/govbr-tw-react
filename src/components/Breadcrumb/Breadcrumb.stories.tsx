@@ -8,7 +8,7 @@ import React from "react";
 
 export default {
   component: Breadcrumb,
-  title: "Breadcrumb",
+  title: "Navigation/Breadcrumb",
 };
 
 export const Default = () => (

@@ -4,7 +4,7 @@ import { GovLogo } from ".";
 
 export default {
   component: GovLogo,
-  title: "Gov Logo",
+  title: "Brands/Gov Logo",
 };
 
 export const Default = () => (

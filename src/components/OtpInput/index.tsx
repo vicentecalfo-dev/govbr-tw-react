@@ -9,8 +9,10 @@ import React, {
   useRef,
   useState,
 } from "react";
+import { VariantProps } from "class-variance-authority";
 import { cn } from "../../libs/utils";
 import BASE_CLASSNAMES from "../../config/baseClassNames";
+import inputVariants from "../Input/variants";
 
 const DEFAULT_DIGITS = 6;
 const PATTERN_CHAR = "x";
@@ -18,6 +20,18 @@ const PATTERN_CHAR = "x";
 type PatternToken =
   | { type: "slot"; index: number }
   | { type: "separator"; value: string; key: string };
+
+type InputVariantProps = VariantProps<typeof inputVariants>;
+
+const SLOT_WIDTH_BY_DENSITY: Record<
+  NonNullable<InputVariantProps["density"]>,
+  string
+> = {
+  lowest: "w-16",
+  low: "w-14",
+  default: "w-12",
+  high: "w-10",
+};
 
 interface OtpInputProps
   extends Omit<React.HTMLAttributes<HTMLDivElement>, "defaultValue" | "onChange"> {
@@ -32,6 +46,8 @@ interface OtpInputProps
   readOnly?: boolean;
   autoFocus?: boolean;
   placeholder?: string;
+  variant?: InputVariantProps["variant"];
+  density?: InputVariantProps["density"];
   slotClassName?: string;
   separatorClassName?: string;
   inputClassName?: string;
@@ -101,6 +117,8 @@ const OtpInput: React.FC<OtpInputProps> = ({
   readOnly,
   autoFocus,
   placeholder,
+  variant = "default",
+  density = "default",
   className,
   slotClassName,
   separatorClassName,
@@ -148,6 +166,11 @@ const OtpInput: React.FC<OtpInputProps> = ({
       index,
     }));
   }, [patternInfo, slotCount]);
+
+  const slotWidthClass =
+    SLOT_WIDTH_BY_DENSITY[
+      (density ?? "default") as NonNullable<InputVariantProps["density"]>
+    ] ?? SLOT_WIDTH_BY_DENSITY["default"];
 
   const inputRefs = useRef<Array<HTMLInputElement | null>>([]);
   const isControlled = value !== undefined;
@@ -363,40 +386,36 @@ const OtpInput: React.FC<OtpInputProps> = ({
         const index = token.index;
 
         return (
-          <div
+          <input
             key={`slot-${index}`}
+            ref={(element) => {
+              inputRefs.current[index] = element;
+            }}
+            type="text"
+            inputMode="numeric"
+            pattern="[0-9]*"
+            autoComplete="one-time-code"
             className={cn(
-              "flex h-12 w-10 items-center justify-center rounded-md border border-govbr-gray-20 bg-govbr-pure-0 text-lg font-semibold text-govbr-pure-100 shadow-sm transition-colors focus-within:border-govbr-blue-warm-vivid-70 focus-within:outline focus-within:outline-2 focus-within:outline-offset-1 focus-within:outline-govbr-blue-warm-vivid-70 data-[filled=true]:border-govbr-blue-warm-vivid-70",
+              inputVariants({ variant, density, iconPosition: "none" }),
+              slotWidthClass,
+              "flex-shrink-0 px-0 text-center",
+              BASE_CLASSNAMES.input.root,
               BASE_CLASSNAMES.otpInput.slot,
               slotClassName,
-              disabled ? "opacity-60 cursor-not-allowed" : ""
+              inputClassName
             )}
+            value={valueArray[index]}
+            onChange={handleSlotChange(index)}
+            onKeyDown={handleKeyDown(index)}
+            onPaste={handlePaste(index)}
+            onFocus={handleSlotFocus}
+            placeholder={placeholder}
+            disabled={disabled}
+            readOnly={readOnly}
+            maxLength={1}
             data-filled={valueArray[index] ? "true" : "false"}
-          >
-            <input
-              ref={(element) => {
-                inputRefs.current[index] = element;
-              }}
-              type="text"
-              inputMode="numeric"
-              pattern="[0-9]*"
-              autoComplete="one-time-code"
-              className={cn(
-                "size-full border-none bg-transparent text-center text-current outline-none placeholder:text-govbr-gray-60",
-                inputClassName
-              )}
-              value={valueArray[index]}
-              onChange={handleSlotChange(index)}
-              onKeyDown={handleKeyDown(index)}
-              onPaste={handlePaste(index)}
-              onFocus={handleSlotFocus}
-              placeholder={placeholder}
-              disabled={disabled}
-              readOnly={readOnly}
-              maxLength={1}
-              aria-label={`Codigo OTP digito ${index + 1}`}
-            />
-          </div>
+            aria-label={`Codigo OTP digito ${index + 1}`}
+          />
         );
       })}
     </div>

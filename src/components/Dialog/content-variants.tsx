@@ -1,6 +1,6 @@
 import { cva } from "class-variance-authority";
 
-const variants = cva("shadow-md flex flex-col", {
+const variants = cva("shadow-md flex flex-col rounded-xl", {
   variants: {
     variant: {
       default: "bg-govbr-pure-0",

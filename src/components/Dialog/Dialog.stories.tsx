@@ -142,6 +142,52 @@ export const Dark = () => {
   );
 };
 
+export const PrimaryOverlay = () => {
+  const dialogRef = useRef<HTMLDialogElement>(null);
+
+  const toggleDialog = () => {
+    if (!dialogRef.current) {
+      return;
+    }
+    dialogRef.current.hasAttribute("open")
+      ? dialogRef.current.close()
+      : dialogRef.current.showModal();
+  };
+
+  useEffect(() => {
+    toggleDialog();
+  }, []);
+
+  return (
+    <>
+      <Button onClick={toggleDialog}>Open Dialog</Button>
+      <Dialog
+        ref={dialogRef}
+        toggleDialog={toggleDialog}
+        className="w-[450px]"
+        overlayClassName="backdrop:bg-govbr-blue-warm-vivid-70/70"
+      >
+        <Dialog.Header>
+          <h1>Dialog com overlay azul</h1>
+        </Dialog.Header>
+        <Dialog.Main className="h-[200px] overflow-auto space-y-3">
+          <p>
+            Este exemplo usa `overlayClassName` para aplicar a cor primária azul
+            ao `::backdrop`, mantendo os cantos arredondados e o conteúdo padrão.
+          </p>
+          <p>
+            O overlay fica com 70% de opacidade sobre `govbr-blue-warm-vivid-70`,
+            destacando o diálogo enquanto o resto da interface permanece visível.
+          </p>
+        </Dialog.Main>
+        <Dialog.Footer>
+          <Button onClick={toggleDialog}>Fechar</Button>
+        </Dialog.Footer>
+      </Dialog>
+    </>
+  );
+};
+
 export const CustomColors = () => {
   const dialogRef = useRef<HTMLDialogElement>(null);
   const toggleDialog = () => {

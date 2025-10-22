@@ -16,6 +16,7 @@ interface DialogProps
   persist?: boolean;
   closeOnEsc?: boolean;
   rootClassName?: string;
+  overlayClassName?: string;
 }
 
 interface DialogComponent extends React.ForwardRefExoticComponent<DialogProps & React.RefAttributes<HTMLDialogElement>>{
@@ -37,6 +38,7 @@ const DialogForwardRef = forwardRef<HTMLDialogElement, DialogProps>(
       persist = false,
       closeOnEsc = true,
       rootClassName,
+      overlayClassName,
       ...props
     }:DialogProps,
     ref
@@ -53,7 +55,9 @@ const DialogForwardRef = forwardRef<HTMLDialogElement, DialogProps>(
       <DialogContext.Provider value={{ variant, padding }}>
         <dialog
           className={cn(
+            "bg-transparent",
             dialogVariants({ variant }),
+            overlayClassName,
             BASE_CLASSNAMES.dialog.root,
             rootClassName
           )}

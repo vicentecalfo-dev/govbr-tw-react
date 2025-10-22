@@ -76,6 +76,23 @@ export const Default = () => {
   );
 };
 
+export const PrimaryOverlay = () => {
+  const { dialogRef, toggleDialog } = useSheetController();
+
+  return (
+    <>
+      <Button onClick={toggleDialog}>Abrir com overlay azul</Button>
+      <Sheet
+        ref={dialogRef}
+        toggleDialog={toggleDialog}
+        overlayClassName="backdrop:bg-govbr-blue-warm-vivid-70/70"
+      >
+        <SheetContent onCancel={toggleDialog} />
+      </Sheet>
+    </>
+  );
+};
+
 export const RightSide = () => {
   const { dialogRef, toggleDialog } = useSheetController();
 

@@ -11,7 +11,6 @@ import React, {
 import { VariantProps } from "class-variance-authority";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faXmark } from "@fortawesome/free-solid-svg-icons";
-import Dialog from "../Dialog";
 import { Button, type ButtonProps } from "../Button";
 import BASE_CLASSNAMES from "../../config/baseClassNames";
 import { cn } from "../../libs/utils";
@@ -53,6 +52,11 @@ const useSheetContext = () => {
 const closeButtonVariantByTheme: Record<SheetVariant, ButtonProps["variant"]> = {
   default: "ghost",
   dark: "ghost-dark",
+};
+
+const overlayFallbackClassByVariant: Record<SheetVariant, string> = {
+  default: "backdrop:bg-black/50",
+  dark: "backdrop:bg-govbr-blue-warm-vivid-90/80", // exemplo de overlay customizado usando Tailwind
 };
 
 type SheetCloseProps = Omit<ButtonProps, "size">;
@@ -136,13 +140,35 @@ const SheetForwardRef = forwardRef<HTMLDialogElement, SheetProps>(
     const resolvedSide = (side ?? "left") as SheetSide;
     const resolvedDensity: SheetDensity =
       density ?? (padding ? "relaxed" : "none");
-    const resolvedOverlayClassName =
-      overlayClassName ?? "backdrop:bg-black/60";
+    const resolvedOverlayClassName = cn(
+      "bg-transparent",
+      overlayFallbackClassByVariant[resolvedVariant],
+      overlayClassName
+    );
 
     const dialogRef = useRef<HTMLDialogElement | null>(null);
     const panelRef = useRef<HTMLDivElement | null>(null);
 
     useImperativeHandle(ref, () => dialogRef.current as HTMLDialogElement, []);
+
+    useEffect(() => {
+      const dialog = dialogRef.current;
+      if (!dialog) {
+        return;
+      }
+
+      const handleCancel = (event: Event) => {
+        if (closeOnEsc === false) {
+          event.preventDefault();
+        }
+      };
+
+      dialog.addEventListener("cancel", handleCancel);
+
+      return () => {
+        dialog.removeEventListener("cancel", handleCancel);
+      };
+    }, [closeOnEsc]);
 
     useLayoutEffect(() => {
       const dialog = dialogRef.current;
@@ -235,53 +261,63 @@ const SheetForwardRef = forwardRef<HTMLDialogElement, SheetProps>(
     const { className: closeButtonClassName, ...closeButtonRest } =
       closeButtonProps ?? {};
 
+    const { onClick: dialogOnClick, ...restDialogProps } = dialogProps;
+
     return (
-      <Dialog
+      <dialog
         ref={dialogRef}
-        toggleDialog={toggleDialog}
-        variant={resolvedVariant === "dark" ? "dark" : "default"}
-        padding={false}
-        persist={persist}
-        closeOnEsc={closeOnEsc}
-        rootClassName={resolvedOverlayClassName}
-        className={cn(
-          sheetViewportVariants({ side: resolvedSide }),
-          containerClassName,
-          BASE_CLASSNAMES.sheet.root,
-          BASE_CLASSNAMES.sheet.container
-        )}
-        {...dialogProps}
+        className={resolvedOverlayClassName}
+        onClick={(event) => {
+          dialogOnClick?.(event);
+          if (event.defaultPrevented) {
+            return;
+          }
+
+          if (!persist && event.currentTarget === event.target) {
+            toggleDialog();
+          }
+        }}
+        {...restDialogProps}
       >
         <SheetContext.Provider
           value={{ variant: resolvedVariant, side: resolvedSide, density: resolvedDensity, toggleDialog }}
         >
           <div
-            ref={(node) => {
-              panelRef.current = node;
-            }}
             className={cn(
-              sheetContentVariants({ side: resolvedSide, variant: resolvedVariant }),
-              className,
-              BASE_CLASSNAMES.sheet.panel
+              sheetViewportVariants({ side: resolvedSide }),
+              containerClassName,
+              BASE_CLASSNAMES.sheet.root,
+              BASE_CLASSNAMES.sheet.container
             )}
-            data-side={resolvedSide}
           >
-            {showCloseButton ? (
-              <SheetClose
-                aria-label={closeButtonLabel}
-                className={cn(
-                  "absolute right-4 top-4",
-                  closeButtonClassName
-                )}
-                {...closeButtonRest}
-              />
-            ) : null}
-            <div className="flex h-full flex-col" data-side={resolvedSide}>
-              {children}
+            <div
+              ref={(node) => {
+                panelRef.current = node;
+              }}
+              className={cn(
+                sheetContentVariants({ side: resolvedSide, variant: resolvedVariant }),
+                className,
+                BASE_CLASSNAMES.sheet.panel
+              )}
+              data-side={resolvedSide}
+            >
+              {showCloseButton ? (
+                <SheetClose
+                  aria-label={closeButtonLabel}
+                  className={cn(
+                    "absolute right-4 top-4",
+                    closeButtonClassName
+                  )}
+                  {...closeButtonRest}
+                />
+              ) : null}
+              <div className="flex h-full flex-col" data-side={resolvedSide}>
+                {children}
+              </div>
             </div>
           </div>
         </SheetContext.Provider>
-      </Dialog>
+      </dialog>
     );
   }
 );

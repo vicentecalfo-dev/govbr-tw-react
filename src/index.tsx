@@ -22,6 +22,7 @@ import OtpInput from "./components/OtpInput";
 import NativeSelect from "./components/NativeSelect";
 import Radio from "./components/Radio";
 import GroupOptions from "./components/GroupOptions";
+import Sheet from "./components/Sheet";
 import {
     DropdownMenu,
     DropdownMenuCheckboxItem,
@@ -83,6 +84,7 @@ export {
     NativeSelect,
     Radio,
     GroupOptions,
+    Sheet,
     Spinner,
     Status,
     Switch,

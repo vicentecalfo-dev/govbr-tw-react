@@ -15,6 +15,7 @@ interface DialogProps
   toggleDialog: () => void;
   persist?: boolean;
   closeOnEsc?: boolean;
+  rootClassName?: string;
 }
 
 interface DialogComponent extends React.ForwardRefExoticComponent<DialogProps & React.RefAttributes<HTMLDialogElement>>{
@@ -35,6 +36,7 @@ const DialogForwardRef = forwardRef<HTMLDialogElement, DialogProps>(
       padding = true,
       persist = false,
       closeOnEsc = true,
+      rootClassName,
       ...props
     }:DialogProps,
     ref
@@ -52,7 +54,8 @@ const DialogForwardRef = forwardRef<HTMLDialogElement, DialogProps>(
         <dialog
           className={cn(
             dialogVariants({ variant }),
-            BASE_CLASSNAMES.dialog.root
+            BASE_CLASSNAMES.dialog.root,
+            rootClassName
           )}
           ref={ref}
           onClick={(e) => {

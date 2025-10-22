@@ -145,6 +145,15 @@ const BASE_CLASSNAMES: Record<string, Record<string, string>> = {
   multiComboBox: {
     root: "govbr-multiComboBox",
   },
+  sheet: {
+    root: "govbr-sheet",
+    container: "govbr-sheet-container",
+    panel: "govbr-sheet-panel",
+    header: "govbr-sheet-header",
+    main: "govbr-sheet-main",
+    footer: "govbr-sheet-footer",
+    close: "govbr-sheet-close-button",
+  },
 };
 
 export default BASE_CLASSNAMES;

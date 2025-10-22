@@ -10,7 +10,7 @@ import { v4 as uuidv4 } from "uuid";
 
 export default {
   component: Tabs,
-  title: "Tabs",
+  title: "Layout/Tabs",
 };
 
 const items = [

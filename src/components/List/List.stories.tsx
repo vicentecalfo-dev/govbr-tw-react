@@ -11,7 +11,7 @@ import React from "react";
 
 export default {
   component: List,
-  title: "List",
+  title: "Layout/List",
 };
 
 const list = [

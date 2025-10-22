@@ -6,7 +6,7 @@ import { v4 as uuidv4 } from "uuid";
 
 export default {
   component: FeaturedTitle,
-  title: "Featured Title",
+  title: "Layout/Featured Title",
 };
 
 export const Default = () => (

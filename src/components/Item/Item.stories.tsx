@@ -7,7 +7,7 @@ import { Button } from "../Button";
 
 export default {
   component: Item,
-  title: "Item",
+  title: "Layout/Item",
 };
 
 const content = {

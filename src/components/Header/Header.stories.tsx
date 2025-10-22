@@ -9,7 +9,7 @@ import Input from "../Input";
 
 export default {
   component: Header,
-  title: "Header",
+  title: "Layout/Header",
 };
 
 const menu = [

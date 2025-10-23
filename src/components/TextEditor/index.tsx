@@ -6,7 +6,13 @@ import remarkGfm from "remark-gfm";
 // Toolbar usando seus componentes
 import { ButtonGroup } from "../ButtonGroup";
 import { Button } from "../Button";
-import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel } from "../DropdownMenu";
+import {
+  DropdownMenu,
+  DropdownMenuTrigger,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+} from "../DropdownMenu";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faBold,
@@ -24,9 +30,7 @@ import {
 
 /**
  * TextEditor – Markdown textarea com toolbar e preview
- * Botões apenas com ícones; Heading via DropdownMenu (H1..H6)
- * Lista numerada + não ordenada
- * Inserção de **tabela Markdown** com inputs de colunas/linhas
+ * Agora com i18n: labels configuráveis via prop `labels`.
  */
 
 const editorVariants = cva(
@@ -61,6 +65,55 @@ const editorVariants = cva(
   }
 );
 
+export type TextEditorLabels = {
+  // Toolbar aria-labels
+  bold: string;
+  italic: string;
+  headings: string; // aria no botão do dropdown
+  headingsMenuTitle: string; // título do menu
+  link: string;
+  unorderedList: string;
+  orderedList: string;
+  code: string;
+  quote: string;
+  table: string; // botão abrir formulário de tabela
+  preview: string; // aria para entrar em preview
+  edit: string; // aria para voltar a editar
+
+  // Form tabela
+  columns: string;
+  rows: string;
+  insert: string;
+  cancel: string;
+
+  // Conteúdos gerados
+  selectedPlaceholder: string; // usado quando não há seleção
+  tableHeaderBase: string; // "Cabeçalho"
+  nothingToPreview: string; // texto do preview vazio
+};
+
+export const DEFAULT_LABELS_PT_BR: TextEditorLabels = {
+  bold: "Negrito",
+  italic: "Itálico",
+  headings: "Cabeçalhos (H1–H6)",
+  headingsMenuTitle: "Cabeçalhos",
+  link: "Link",
+  unorderedList: "Lista não ordenada",
+  orderedList: "Lista numerada",
+  code: "Código inline",
+  quote: "Citação",
+  table: "Inserir tabela (linhas/colunas)",
+  preview: "Visualizar",
+  edit: "Voltar para edição",
+  columns: "Colunas",
+  rows: "Linhas",
+  insert: "Inserir",
+  cancel: "Cancelar",
+  selectedPlaceholder: "texto",
+  tableHeaderBase: "Cabeçalho",
+  nothingToPreview: "_Nada para pré-visualizar._",
+};
+
 export type TextEditorProps = {
   value: string;
   onChange: (nextValue: string) => void;
@@ -71,6 +124,7 @@ export type TextEditorProps = {
   className?: string;
   disabled?: boolean;
   readOnly?: boolean;
+  labels?: Partial<TextEditorLabels>; // <== NOVO
 } & VariantProps<typeof editorVariants>;
 
 function cx(...cls: Array<string | undefined | false>) {
@@ -89,7 +143,10 @@ export default function TextEditor({
   readOnly,
   variant,
   density,
+  labels,
 }: TextEditorProps) {
+  const L: TextEditorLabels = { ...DEFAULT_LABELS_PT_BR, ...(labels || {}) };
+
   const [showPreview, setShowPreview] = useState(previewInitially);
   const [tableFormOpen, setTableFormOpen] = useState(false);
   const [cols, setCols] = useState<number>(3);
@@ -132,7 +189,7 @@ export default function TextEditor({
         next = before + wrap(selected) + after;
       } else {
         const { prefix = "", suffix = "" } = wrap;
-        next = before + prefix + (selected || "texto") + suffix + after;
+        next = before + prefix + (selected || L.selectedPlaceholder) + suffix + after;
       }
 
       onChange(next);
@@ -142,25 +199,25 @@ export default function TextEditor({
         ta.setSelectionRange(pos, pos);
       });
     },
-    [value, onChange]
+    [value, onChange, L.selectedPlaceholder]
   );
 
   const insertHeading = useCallback(
-    (level: 1 | 2 | 3 | 4 | 5 | 6) => apply((sel) => `${"#".repeat(level)} ${sel || `Título ${level}`}`),
-    [apply]
+    (level: 1 | 2 | 3 | 4 | 5 | 6) => apply((sel) => `${"#".repeat(level)} ${sel || `${L.tableHeaderBase} ${level}`}`),
+    [apply, L.tableHeaderBase]
   );
 
   const buildMarkdownTable = useCallback(
     (c: number, r: number) => {
       const safeC = Math.max(1, Math.min(20, Math.floor(c)));
       const safeR = Math.max(1, Math.min(50, Math.floor(r)));
-      const header = Array.from({ length: safeC }, (_, i) => `Cabeçalho ${i + 1}`).join(" | ");
+      const header = Array.from({ length: safeC }, (_, i) => `${L.tableHeaderBase} ${i + 1}`).join(" | ");
       const sep = Array.from({ length: safeC }, () => "---").join(" | ");
       const row = Array.from({ length: safeC }, () => " ").join(" | ");
       const body = Array.from({ length: safeR }, () => `| ${row} |`).join("\n");
       return `\n| ${header} |\n| ${sep} |\n${body}\n`;
     },
-    []
+    [L.tableHeaderBase]
   );
 
   const handleInsertTable = useCallback(() => {
@@ -173,22 +230,22 @@ export default function TextEditor({
       <div className="flex flex-col gap-2">
         <div className="flex flex-wrap items-center gap-3">
           <div className="flex gap-0">
-            <Button size="icon" onClick={() => apply({ prefix: "**", suffix: "**" })} aria-label="Negrito" variant="ghost">
+            <Button size="icon" onClick={() => apply({ prefix: "**", suffix: "**" })} aria-label={L.bold} variant="ghost">
               <FontAwesomeIcon icon={faBold} />
             </Button>
-            <Button size="icon" onClick={() => apply({ prefix: "*", suffix: "*" })} aria-label="Itálico" variant="ghost">
+            <Button size="icon" onClick={() => apply({ prefix: "*", suffix: "*" })} aria-label={L.italic} variant="ghost">
               <FontAwesomeIcon icon={faItalic} />
             </Button>
 
             {/* DropdownMenu para Cabeçalhos (H1..H6) */}
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button size="icon" aria-label="Cabeçalhos (H1–H6)" variant="ghost">
+                <Button size="icon" aria-label={L.headings} variant="ghost">
                   <FontAwesomeIcon icon={faHeading} />
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent side="bottom" className="min-w-36">
-                <DropdownMenuLabel>Headings</DropdownMenuLabel>
+                <DropdownMenuLabel>{L.headingsMenuTitle}</DropdownMenuLabel>
                 {[1, 2, 3, 4, 5, 6].map((n) => (
                   <DropdownMenuItem key={n} onClick={() => insertHeading(n as 1 | 2 | 3 | 4 | 5 | 6)}>
                     {`H${n}`}
@@ -197,24 +254,24 @@ export default function TextEditor({
               </DropdownMenuContent>
             </DropdownMenu>
 
-            <Button size="icon" onClick={() => apply({ prefix: "[", suffix: "](https://)" })} aria-label="Link" variant="ghost">
+            <Button size="icon" onClick={() => apply({ prefix: "[", suffix: "](https://)" })} aria-label={L.link} variant="ghost">
               <FontAwesomeIcon icon={faLink} />
             </Button>
-            <Button size="icon" onClick={() => apply((sel) => `- ${sel || "item"}`)} aria-label="Lista não ordenada" variant="ghost">
+            <Button size="icon" onClick={() => apply((sel) => `- ${sel || "item"}`)} aria-label={L.unorderedList} variant="ghost">
               <FontAwesomeIcon icon={faListUl} />
             </Button>
-            <Button size="icon" onClick={() => apply((sel) => `1. ${sel || "item"}`)} aria-label="Lista numerada" variant="ghost">
+            <Button size="icon" onClick={() => apply((sel) => `1. ${sel || "item"}`)} aria-label={L.orderedList} variant="ghost">
               <FontAwesomeIcon icon={faListOl} />
             </Button>
-            <Button size="icon" onClick={() => apply({ prefix: "`", suffix: "`" })} aria-label="Código inline" variant="ghost">
+            <Button size="icon" onClick={() => apply({ prefix: "`", suffix: "`" })} aria-label={L.code} variant="ghost">
               <FontAwesomeIcon icon={faCode} />
             </Button>
-            <Button size="icon" onClick={() => apply((sel) => `> ${sel || "citação"}`)} aria-label="Citação" variant="ghost">
+            <Button size="icon" onClick={() => apply((sel) => `> ${sel || "citação"}`)} aria-label={L.quote} variant="ghost">
               <FontAwesomeIcon icon={faQuoteRight} />
             </Button>
 
             {/* Tabela (abre mini formulário abaixo da barra) */}
-            <Button size="icon" onClick={() => setTableFormOpen((s) => !s)} aria-label="Inserir tabela (linhas/colunas)" variant="ghost">
+            <Button size="icon" onClick={() => setTableFormOpen((s) => !s)} aria-label={L.table} variant="ghost">
               <FontAwesomeIcon icon={faTable} />
             </Button>
           </div>
@@ -225,7 +282,7 @@ export default function TextEditor({
               size="icon"
               variant={showPreview ? "default-success" : "default"}
               onClick={() => setShowPreview((s) => !s)}
-              aria-label={showPreview ? "Voltar para edição" : "Visualizar"}
+              aria-label={showPreview ? L.edit : L.preview}
             >
               <FontAwesomeIcon icon={showPreview ? faPen : faEye} />
             </Button>
@@ -235,7 +292,7 @@ export default function TextEditor({
         {tableFormOpen && (
           <div className="flex items-end gap-3 rounded-md border bg-govbr-gray-10 p-3">
             <div className="flex flex-col gap-1">
-              <label className="text-xs">Colunas</label>
+              <label className="text-xs">{L.columns}</label>
               <input
                 type="number"
                 min={1}
@@ -246,7 +303,7 @@ export default function TextEditor({
               />
             </div>
             <div className="flex flex-col gap-1">
-              <label className="text-xs">Linhas</label>
+              <label className="text-xs">{L.rows}</label>
               <input
                 type="number"
                 min={1}
@@ -257,14 +314,16 @@ export default function TextEditor({
               />
             </div>
             <div className="ml-auto flex gap-2">
-              <Button onClick={handleInsertTable}>Inserir</Button>
-              <Button variant="outline" onClick={() => setTableFormOpen(false)}>Cancelar</Button>
+              <Button onClick={handleInsertTable}>{L.insert}</Button>
+              <Button variant="outline" onClick={() => setTableFormOpen(false)}>
+                {L.cancel}
+              </Button>
             </div>
           </div>
         )}
       </div>
     ),
-    [apply, insertHeading, showPreview, tableFormOpen, cols, rows, handleInsertTable]
+    [L, apply, insertHeading, showPreview, tableFormOpen, cols, rows, handleInsertTable]
   );
 
   return (
@@ -299,7 +358,9 @@ export default function TextEditor({
               "prose prose-sm max-w-none overflow-auto bg-transparent"
             )}
           >
-            <ReactMarkdown remarkPlugins={[remarkGfm]}>{value || "_Nada para pré-visualizar._"}</ReactMarkdown>
+            <ReactMarkdown remarkPlugins={[remarkGfm]}>
+              {value || L.nothingToPreview}
+            </ReactMarkdown>
           </div>
         )}
       </div>
@@ -308,3 +369,4 @@ export default function TextEditor({
     </div>
   );
 }
+

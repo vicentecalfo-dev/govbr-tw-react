@@ -3,7 +3,7 @@ import OtpInput from ".";
 
 export default {
   component: OtpInput,
-  title: "Form/OtpInput",
+  title: "OtpInput",
 };
 
 export const Default = () => (

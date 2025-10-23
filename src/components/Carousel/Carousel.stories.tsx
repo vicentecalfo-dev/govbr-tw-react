@@ -3,7 +3,7 @@ import React from "react";
 
 export default {
   component: Carousel,
-  title: "Layout/Carousel",
+  title: "Carousel",
 };
 
 export const Default = () => (

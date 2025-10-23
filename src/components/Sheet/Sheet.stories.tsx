@@ -4,7 +4,7 @@ import { Button } from "../Button";
 
 export default {
   component: Sheet,
-  title: "Overlay/Sheet",
+  title: "Sheet",
 };
 
 const useSheetController = () => {

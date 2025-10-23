@@ -4,7 +4,7 @@ import { Button } from "../Button";
 
 export default {
   component: TextEditor,
-  title: "Form/TextEditor",
+  title: "TextEditor",
 };
 
 export const Default = () => {

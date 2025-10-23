@@ -11,7 +11,7 @@ import { v4 as uuidv4 } from "uuid";
 
 export default {
   component: Accordion,
-  title: "Layout/Accordion",
+  title: "Accordion",
 };
 
 const data = [

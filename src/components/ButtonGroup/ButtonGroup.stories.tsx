@@ -13,7 +13,7 @@ import { ButtonGroup } from ".";
 
 export default {
   component: ButtonGroup,
-  title: "Navigation/ButtonGroup",
+  title: "ButtonGroup",
 };
 
 const wrapper = "flex flex-col gap-6 p-6";

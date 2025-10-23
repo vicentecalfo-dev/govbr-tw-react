@@ -4,7 +4,7 @@ import { MultiComboBox } from ".";
 
 export default {
     component: MultiComboBox,
-    title: "Form/MultiComboBox",
+    title: "MultiComboBox",
 };
 
 const options = [

@@ -4,7 +4,7 @@ import { DatePicker } from ".";
 
 export default {
   component: DatePicker,
-  title: "Form/DatePicker",
+  title: "DatePicker",
 };
 
 export const Default = () => {

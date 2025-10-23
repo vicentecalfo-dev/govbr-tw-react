@@ -11,7 +11,7 @@ const cards = Array.from({ length: 12 }).map((_, index) => ({
 
 export default {
   component: CarouselSlider,
-  title: "Layout/CarouselSlider",
+  title: "CarouselSlider",
 };
 
 export const SingleItem = () => (

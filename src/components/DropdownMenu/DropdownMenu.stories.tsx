@@ -151,7 +151,7 @@ const MenuExample = ({
 };
 
 const meta: Meta<typeof MenuExample> = {
-  title: "Navigation/DropdownMenu",
+  title: "DropdownMenu",
   component: MenuExample,
   argTypes: {
     contentSide: {

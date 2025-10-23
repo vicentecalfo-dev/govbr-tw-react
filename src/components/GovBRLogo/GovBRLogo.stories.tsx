@@ -4,7 +4,7 @@ import { v4 as uuidv4 } from "uuid";
 
 export default {
   component: GovBRLogo,
-  title: "Brands/Gov.BR Logo",
+  title: "Gov.BR Logo",
 };
 
 export const Default = () => (

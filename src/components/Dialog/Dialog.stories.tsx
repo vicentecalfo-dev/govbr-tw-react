@@ -8,7 +8,7 @@ import { v4 as uuidv4 } from "uuid";
 
 export default {
   component: Dialog,
-  title: "Overlay/Dialog",
+  title: "Dialog",
 };
 
 export const Default = () => {

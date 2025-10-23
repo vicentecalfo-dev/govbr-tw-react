@@ -6,7 +6,7 @@ import { v4 as uuidv4 } from "uuid";
 
 export default {
   component: Checkbox,
-  title: "Form/Checkbox",
+  title: "Checkbox",
 };
 
 export const Default = () => {

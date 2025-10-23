@@ -12,7 +12,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 export default {
   component: Input,
-  title: "Form/Input",
+  title: "Input",
 };
 
 export const Default = () => {

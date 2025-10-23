@@ -5,7 +5,7 @@ import { v4 as uuidv4 } from "uuid";
 
 export default {
   component: Radio,
-  title: "Form/Radio",
+  title: "Radio",
 };
 
 export const Default = () => {

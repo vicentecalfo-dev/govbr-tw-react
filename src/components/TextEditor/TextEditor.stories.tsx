@@ -23,6 +23,10 @@ export const Default = () => {
         <code className="px-2 py-1 rounded bg-govbr-gray-10">{value.length} caractere(s)</code>
         <Button onClick={() => setValue("")}>Limpar</Button>
       </div>
+      {/* Preview do valor bruto abaixo */}
+      <pre className="mt-2 max-h-72 overflow-auto rounded border border-govbr-gray-20 bg-govbr-gray-10 p-3 text-sm whitespace-pre-wrap">
+{value || "(vazio)"}
+      </pre>
     </div>
   );
 };

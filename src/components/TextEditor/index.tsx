@@ -17,6 +17,7 @@ import {
   faListOl,
   faCode,
   faQuoteRight,
+  faTable,
   faEye,
   faPen,
 } from "@fortawesome/free-solid-svg-icons";
@@ -24,7 +25,8 @@ import {
 /**
  * TextEditor – Markdown textarea com toolbar e preview
  * Botões apenas com ícones; Heading via DropdownMenu (H1..H6)
- * Agora com **Lista numerada** ao lado da lista não ordenada
+ * Lista numerada + não ordenada
+ * Inserção de **tabela Markdown** com inputs de colunas/linhas
  */
 
 const editorVariants = cva(
@@ -89,8 +91,31 @@ export default function TextEditor({
   density,
 }: TextEditorProps) {
   const [showPreview, setShowPreview] = useState(previewInitially);
+  const [tableFormOpen, setTableFormOpen] = useState(false);
+  const [cols, setCols] = useState<number>(3);
+  const [rows, setRows] = useState<number>(3);
+
   const areaRef = useRef<HTMLTextAreaElement | null>(null);
   const id = useId();
+
+  const insertAtCursor = useCallback(
+    (text: string) => {
+      if (!areaRef.current) return;
+      const ta = areaRef.current;
+      const start = ta.selectionStart ?? 0;
+      const end = ta.selectionEnd ?? 0;
+      const before = value.slice(0, start);
+      const after = value.slice(end);
+      const next = `${before}${text}${after}`;
+      onChange(next);
+      requestAnimationFrame(() => {
+        const pos = start + text.length;
+        ta.focus();
+        ta.setSelectionRange(pos, pos);
+      });
+    },
+    [value, onChange]
+  );
 
   const apply = useCallback(
     (wrap: { prefix?: string; suffix?: string } | ((sel: string) => string)) => {
@@ -125,65 +150,121 @@ export default function TextEditor({
     [apply]
   );
 
+  const buildMarkdownTable = useCallback(
+    (c: number, r: number) => {
+      const safeC = Math.max(1, Math.min(20, Math.floor(c)));
+      const safeR = Math.max(1, Math.min(50, Math.floor(r)));
+      const header = Array.from({ length: safeC }, (_, i) => `Cabeçalho ${i + 1}`).join(" | ");
+      const sep = Array.from({ length: safeC }, () => "---").join(" | ");
+      const row = Array.from({ length: safeC }, () => " ").join(" | ");
+      const body = Array.from({ length: safeR }, () => `| ${row} |`).join("\n");
+      return `\n| ${header} |\n| ${sep} |\n${body}\n`;
+    },
+    []
+  );
+
+  const handleInsertTable = useCallback(() => {
+    insertAtCursor(buildMarkdownTable(cols, rows));
+    setTableFormOpen(false);
+  }, [insertAtCursor, buildMarkdownTable, cols, rows]);
+
   const toolbar = useMemo(
     () => (
-      <div className="flex flex-wrap items-center gap-3">
-        <ButtonGroup>
-          <Button size="icon" onClick={() => apply({ prefix: "**", suffix: "**" })} aria-label="Negrito">
-            <FontAwesomeIcon icon={faBold} />
-          </Button>
-          <Button size="icon" onClick={() => apply({ prefix: "*", suffix: "*" })} aria-label="Itálico">
-            <FontAwesomeIcon icon={faItalic} />
-          </Button>
+      <div className="flex flex-col gap-2">
+        <div className="flex flex-wrap items-center gap-3">
+          <div className="flex gap-0">
+            <Button size="icon" onClick={() => apply({ prefix: "**", suffix: "**" })} aria-label="Negrito" variant="ghost">
+              <FontAwesomeIcon icon={faBold} />
+            </Button>
+            <Button size="icon" onClick={() => apply({ prefix: "*", suffix: "*" })} aria-label="Itálico" variant="ghost">
+              <FontAwesomeIcon icon={faItalic} />
+            </Button>
 
-          {/* DropdownMenu para Cabeçalhos (H1..H6) */}
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button size="icon" aria-label="Cabeçalhos (H1–H6)">
-                <FontAwesomeIcon icon={faHeading} />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent side="bottom" className="min-w-36">
-              <DropdownMenuLabel>Headings</DropdownMenuLabel>
-              {[1, 2, 3, 4, 5, 6].map((n) => (
-                <DropdownMenuItem key={n} onClick={() => insertHeading(n as 1 | 2 | 3 | 4 | 5 | 6)}>
-                  {`H${n}`}
-                </DropdownMenuItem>
-              ))}
-            </DropdownMenuContent>
-          </DropdownMenu>
+            {/* DropdownMenu para Cabeçalhos (H1..H6) */}
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button size="icon" aria-label="Cabeçalhos (H1–H6)" variant="ghost">
+                  <FontAwesomeIcon icon={faHeading} />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent side="bottom" className="min-w-36">
+                <DropdownMenuLabel>Headings</DropdownMenuLabel>
+                {[1, 2, 3, 4, 5, 6].map((n) => (
+                  <DropdownMenuItem key={n} onClick={() => insertHeading(n as 1 | 2 | 3 | 4 | 5 | 6)}>
+                    {`H${n}`}
+                  </DropdownMenuItem>
+                ))}
+              </DropdownMenuContent>
+            </DropdownMenu>
 
-          <Button size="icon" onClick={() => apply({ prefix: "[", suffix: "](https://)" })} aria-label="Link">
-            <FontAwesomeIcon icon={faLink} />
-          </Button>
-          <Button size="icon" onClick={() => apply((sel) => `- ${sel || "item"}`)} aria-label="Lista não ordenada">
-            <FontAwesomeIcon icon={faListUl} />
-          </Button>
-          <Button size="icon" onClick={() => apply((sel) => `1. ${sel || "item"}`)} aria-label="Lista numerada">
-            <FontAwesomeIcon icon={faListOl} />
-          </Button>
-          <Button size="icon" onClick={() => apply({ prefix: "`", suffix: "`" })} aria-label="Código inline">
-            <FontAwesomeIcon icon={faCode} />
-          </Button>
-          <Button size="icon" onClick={() => apply((sel) => `> ${sel || "citação"}`)} aria-label="Citação">
-            <FontAwesomeIcon icon={faQuoteRight} />
-          </Button>
-        </ButtonGroup>
+            <Button size="icon" onClick={() => apply({ prefix: "[", suffix: "](https://)" })} aria-label="Link" variant="ghost">
+              <FontAwesomeIcon icon={faLink} />
+            </Button>
+            <Button size="icon" onClick={() => apply((sel) => `- ${sel || "item"}`)} aria-label="Lista não ordenada" variant="ghost">
+              <FontAwesomeIcon icon={faListUl} />
+            </Button>
+            <Button size="icon" onClick={() => apply((sel) => `1. ${sel || "item"}`)} aria-label="Lista numerada" variant="ghost">
+              <FontAwesomeIcon icon={faListOl} />
+            </Button>
+            <Button size="icon" onClick={() => apply({ prefix: "`", suffix: "`" })} aria-label="Código inline" variant="ghost">
+              <FontAwesomeIcon icon={faCode} />
+            </Button>
+            <Button size="icon" onClick={() => apply((sel) => `> ${sel || "citação"}`)} aria-label="Citação" variant="ghost">
+              <FontAwesomeIcon icon={faQuoteRight} />
+            </Button>
 
-        {/* Toggle Preview/Edit (ícone só) */}
-        <ButtonGroup className="ml-auto">
-          <Button
-            size="icon"
-            variant={showPreview ? "default-success" : "outline"}
-            onClick={() => setShowPreview((s) => !s)}
-            aria-label={showPreview ? "Voltar para edição" : "Visualizar"}
-          >
-            <FontAwesomeIcon icon={showPreview ? faPen : faEye} />
-          </Button>
-        </ButtonGroup>
+            {/* Tabela (abre mini formulário abaixo da barra) */}
+            <Button size="icon" onClick={() => setTableFormOpen((s) => !s)} aria-label="Inserir tabela (linhas/colunas)" variant="ghost">
+              <FontAwesomeIcon icon={faTable} />
+            </Button>
+          </div>
+
+          {/* Toggle Preview/Edit (ícone só) */}
+          <ButtonGroup className="ml-auto">
+            <Button
+              size="icon"
+              variant={showPreview ? "default-success" : "default"}
+              onClick={() => setShowPreview((s) => !s)}
+              aria-label={showPreview ? "Voltar para edição" : "Visualizar"}
+            >
+              <FontAwesomeIcon icon={showPreview ? faPen : faEye} />
+            </Button>
+          </ButtonGroup>
+        </div>
+
+        {tableFormOpen && (
+          <div className="flex items-end gap-3 rounded-md border bg-govbr-gray-10 p-3">
+            <div className="flex flex-col gap-1">
+              <label className="text-xs">Colunas</label>
+              <input
+                type="number"
+                min={1}
+                max={20}
+                value={cols}
+                onChange={(e) => setCols(parseInt(e.target.value || "1", 10))}
+                className="w-24 rounded border border-govbr-gray-30 bg-govbr-pure-100/5 p-2 text-sm"
+              />
+            </div>
+            <div className="flex flex-col gap-1">
+              <label className="text-xs">Linhas</label>
+              <input
+                type="number"
+                min={1}
+                max={50}
+                value={rows}
+                onChange={(e) => setRows(parseInt(e.target.value || "1", 10))}
+                className="w-24 rounded border border-govbr-gray-30 bg-govbr-pure-100/5 p-2 text-sm"
+              />
+            </div>
+            <div className="ml-auto flex gap-2">
+              <Button onClick={handleInsertTable}>Inserir</Button>
+              <Button variant="outline" onClick={() => setTableFormOpen(false)}>Cancelar</Button>
+            </div>
+          </div>
+        )}
       </div>
     ),
-    [apply, insertHeading, showPreview]
+    [apply, insertHeading, showPreview, tableFormOpen, cols, rows, handleInsertTable]
   );
 
   return (

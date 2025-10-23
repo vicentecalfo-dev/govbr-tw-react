@@ -15,7 +15,7 @@ export const Default = () => (
 
 export const WithPattern = () => (
   <div className="flex flex-col gap-4 p-6">
-    <OtpInput pattern="xxx-xxx" />
+    <OtpInput pattern="xxx-xxx-xxx" />
     <OtpInput pattern="xxxx-xx" />
     <OtpInput pattern="xx-xx-xx" variant="success" />
   </div>

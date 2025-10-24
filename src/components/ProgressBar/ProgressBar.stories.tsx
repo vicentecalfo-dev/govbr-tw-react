@@ -11,7 +11,9 @@ export const Default = () => {
   return (
     <div className="flex flex-col gap-4 w-[720px]">
       <div className="flex items-center gap-3 text-sm">
-        <label htmlFor="range-default" className="min-w-24 opacity-80">Valor</label>
+        <label htmlFor="range-default" className="min-w-24 opacity-80">
+          Valor
+        </label>
         <input
           id="range-default"
           type="range"
@@ -28,7 +30,7 @@ export const Default = () => {
 
       <br />
 
-       <ProgressBar value={value} hideLabelOnComplete={false}/>
+      <ProgressBar value={value} hideLabelOnComplete={false} />
     </div>
   );
 };
@@ -37,7 +39,9 @@ export const Variants = () => {
   const [value, setValue] = useState(60);
   const common = (
     <div className="flex items-center gap-3 text-sm">
-      <label htmlFor="range-variants" className="min-w-24 opacity-80">Valor</label>
+      <label htmlFor="range-variants" className="min-w-24 opacity-80">
+        Valor
+      </label>
       <input
         id="range-variants"
         type="range"
@@ -68,7 +72,9 @@ export const Dark = () => {
   return (
     <div className="flex flex-col gap-4 w-[720px] bg-govbr-blue-warm-vivid-90 p-6 rounded">
       <div className="flex items-center gap-3 text-sm text-govbr-pure-0">
-        <label htmlFor="range-dark" className="min-w-24 opacity-80">Valor</label>
+        <label htmlFor="range-dark" className="min-w-24 opacity-80">
+          Valor
+        </label>
         <input
           id="range-dark"
           type="range"
@@ -82,7 +88,12 @@ export const Dark = () => {
       </div>
 
       <ProgressBar value={value} theme="dark" />
-      <ProgressBar value={value} theme="dark" variant="success" label="Processando" />
+      <ProgressBar
+        value={value}
+        theme="dark"
+        variant="success"
+        label="Processando"
+      />
       <ProgressBar value={value} theme="dark" variant="danger" label="Falha" />
     </div>
   );
@@ -93,7 +104,9 @@ export const Density = () => {
   return (
     <div className="flex flex-col gap-4 w-[720px]">
       <div className="flex items-center gap-3 text-sm">
-        <label htmlFor="range-density" className="min-w-24 opacity-80">Valor</label>
+        <label htmlFor="range-density" className="min-w-24 opacity-80">
+          Valor
+        </label>
         <input
           id="range-density"
           type="range"
@@ -119,7 +132,9 @@ export const CustomColors = () => {
   return (
     <div className="flex flex-col gap-4 w-[720px]">
       <div className="flex items-center gap-3 text-sm">
-        <label htmlFor="range-custom" className="min-w-24 opacity-80">Valor</label>
+        <label htmlFor="range-custom" className="min-w-24 opacity-80">
+          Valor
+        </label>
         <input
           id="range-custom"
           type="range"
@@ -155,7 +170,9 @@ export const WithoutLabels = () => {
   return (
     <div className="flex flex-col gap-4 w-[720px]">
       <div className="flex items-center gap-3 text-sm">
-        <label htmlFor="range-nolabels" className="min-w-24 opacity-80">Valor</label>
+        <label htmlFor="range-nolabels" className="min-w-24 opacity-80">
+          Valor
+        </label>
         <input
           id="range-nolabels"
           type="range"
@@ -173,4 +190,33 @@ export const WithoutLabels = () => {
   );
 };
 
+export const SatisfactionScale = () => {
+  return (
+    <div className="flex flex-col gap-4 w-[720px]">
+      {/* Trilho e barra customizados via Tailwind */}
+      <ProgressBar
+        value={20}
+        progressClassName="bg-red-600"
+        label="Escala de Satisfação"
+        progresslabel="2/10"
+        hideLabelOnComplete={false}
+      />
 
+      <ProgressBar
+        value={50}
+        progressClassName="bg-yellow-500"
+        label="Escala de Satisfação"
+        progresslabel="5/10"
+        hideLabelOnComplete={false}
+      />
+
+      <ProgressBar
+        value={100}
+        progressClassName="bg-green-700"
+        label="Escala de Satisfação"
+        progresslabel="10/10"
+        hideLabelOnComplete={false}
+      />
+    </div>
+  );
+};

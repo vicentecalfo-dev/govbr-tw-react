@@ -82,6 +82,7 @@ export type ProgressBarProps = {
   labelVariant?: VariantProps<typeof percentVariants>["variant"];
   labelClassName?: string;
   hideLabelOnComplete?: boolean;
+  progresslabel?:string;
 } & VariantProps<typeof trackVariants> &
   VariantProps<typeof barVariants>;
 
@@ -101,17 +102,19 @@ export default function ProgressBar({
   density,
   labelVariant,
   labelClassName,
-  hideLabelOnComplete = true
+  hideLabelOnComplete = true,
+  progresslabel = ""
 }: ProgressBarProps) {
-  const pct = Math.max(0, Math.min(100, Number.isFinite(value) ? value : 0));
+  const pct: any = Math.max(0, Math.min(100, Number.isFinite(value) ? value : 0));
 
+  
   // Detecta se o label termina com "..."
   const endsWithEllipsis = useMemo(() => /\.\.\.$/.test(label), [label]);
   const baseLabel = useMemo(() => (endsWithEllipsis ? label.slice(0, -3) : label), [label, endsWithEllipsis]);
 
   // Animação dos três pontos: 0 → 1 → 2 → 3 → 0 (0 = sem pontos)
   const [dotCount, setDotCount] = useState(0);
-  const shouldAnimate = showLabels && pct < 100 && endsWithEllipsis;
+  const shouldAnimate = progresslabel === "" ? showLabels && pct < 100 && endsWithEllipsis : false;
 
   useEffect(() => {
     if (!shouldAnimate) {
@@ -140,7 +143,7 @@ export default function ProgressBar({
           <span aria-live="polite">
             {pct === 100 && hideLabelOnComplete ? "" : displayLabel}
           </span>
-          <span className={percentCls}>{pct === 100 && hideLabelOnComplete ? "" : `${pct}%`}</span>
+          <span className={percentCls}>{pct === 100 && hideLabelOnComplete ? "" : `${progresslabel === "" ? `${pct}%` : progresslabel}`}</span>
         </div>
       )}
 

@@ -28,6 +28,20 @@ export const SingleItem = () => (
   </div>
 );
 
+export const BorderLess = () => (
+  <div className="max-w-3xl p-6">
+    <CarouselSlider itemsPerView={1} border={false}>
+      {cards.slice(0, 4).map((card) => (
+        <article key={card.title} className="flex flex-col gap-2">
+          <h3 className="text-lg font-semibold">{card.title}</h3>
+          <p className="text-sm opacity-70">{card.description}</p>
+          <Button size="auto">Saiba mais</Button>
+        </article>
+      ))}
+    </CarouselSlider>
+  </div>
+);
+
 export const MultipleItems = () => (
   <div className="max-w-5xl p-6">
     <CarouselSlider itemsPerView={2}>

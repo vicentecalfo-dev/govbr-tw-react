@@ -24,6 +24,7 @@ export interface CarouselSliderProps
   loop?: boolean;
   showIndicators?: boolean;
   floatingControls?: boolean;
+  border?: boolean;
 }
 
 const chunkChildren = (children: ReactNode[], size: number) => {
@@ -47,6 +48,7 @@ export const CarouselSlider = ({
   floatingControls = true,
   variant = "light",
   density = "comfortable",
+  border = true,
   ...props
 }: CarouselSliderProps) => {
   const childrenArray = useMemo(() => Children.toArray(children), [children]);
@@ -99,6 +101,7 @@ export const CarouselSlider = ({
       className={cn(
         carouselSliderVariants({ variant, density }),
         BASE_CLASSNAMES.carouselSlider.root,
+        border ? "" : "!border-none !rounded-none",
         className
       )}
       {...props}
@@ -167,16 +170,11 @@ export const CarouselSlider = ({
                   }}
                 >
                   {group.map((item, itemIndex) => {
-                    const cardClasses =
-                      variant === "dark"
-                        ? "border-govbr-blue-warm-20 bg-govbr-blue-warm-vivid-80 text-govbr-pure-0 hover:shadow-lg"
-                        : "border-govbr-gray-10 bg-govbr-pure-0 text-govbr-gray-80 hover:shadow-md";
                     return (
                       <div
                         key={`carousel-slider-item-${slideIndex}-${itemIndex}`}
                         className={cn(
-                          "h-full rounded-xl border p-4 shadow-sm transition",
-                          cardClasses
+                          "h-full transition",
                         )}
                       >
                         {item}

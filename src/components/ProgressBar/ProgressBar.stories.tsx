@@ -3,7 +3,7 @@ import ProgressBar from "."; // ajuste o caminho, se necessário
 
 export default {
   component: ProgressBar,
-  title: "Feedback/ProgressBar",
+  title: "ProgressBar",
 };
 
 export const Default = () => {
@@ -133,14 +133,14 @@ export const CustomColors = () => {
         value={value}
         trackClassName="bg-teal-100"
         progressClassName="bg-teal-500"
-        label="Teal"
+        label="Teal - Loading ..."
       />
 
       <ProgressBar
         value={value}
         trackClassName="bg-pink-500/20"
         progressClassName="bg-pink-500"
-        label="Pink"
+        label="Pink - Carregando ..."
       />
     </div>
   );

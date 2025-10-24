@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { cva, type VariantProps } from "class-variance-authority";
 
 /**
@@ -6,15 +6,15 @@ import { cva, type VariantProps } from "class-variance-authority";
  * - ÚNICA fonte de verdade para variantes via cva (sem switch duplicado)
  * - trackClassName / progressClassName continuam podendo sobrescrever estilos
  * - Labels respeitam o tema e aceitam variante separada
+ * - NOVO: label some em 100% e anima "..." quando o texto terminar com "..."
  */
 
 const trackVariants = cva(
-  "w-full overflow-hidden rounded-md", // base do trilho
+  "w-full overflow-hidden rounded-md",
   {
     variants: {
       theme: {
         light: "bg-govbr-gray-10",
-        // inclui fallback para ambientes que suportam color-scheme
         dark: "bg-govbr-blue-warm-20/30 supports-[color-scheme:dark]:bg-govbr-blue-warm-20/40",
       },
       density: {
@@ -32,31 +32,22 @@ const trackVariants = cva(
 );
 
 const barVariants = cva(
-  "h-full transition-[width] duration-300 ease-out", // base da barra
+  "h-full transition-[width] duration-300 ease-out",
   {
     variants: {
-      theme: {
-        light: "",
-        dark: "",
-      },
+      theme: { light: "", dark: "" },
       variant: {
-        // Mantido como padrão
         default: "bg-govbr-blue-warm-vivid-70",
-        // Alinhado aos tokens usados no código original (switch)
         success: "bg-govbr-green-cool-vivid-50",
         danger: "bg-govbr-red-vivid-50",
         warning: "bg-govbr-yellow-vivid-20",
         info: "bg-govbr-gray-60",
       },
     },
-    defaultVariants: {
-      theme: "light",
-      variant: "default",
-    },
+    defaultVariants: { theme: "light", variant: "default" },
   }
 );
 
-// Labels (texto à esquerda e porcentagem à direita)
 const labelWrapVariants = cva("mb-1 flex items-center justify-between text-sm", {
   variants: {
     theme: {
@@ -67,13 +58,9 @@ const labelWrapVariants = cva("mb-1 flex items-center justify-between text-sm", 
   defaultVariants: { theme: "light" },
 });
 
-// Opcional: cor de destaque da % dependendo da variante (por padrão herda)
 const percentVariants = cva("font-medium tabular-nums", {
   variants: {
-    theme: {
-      light: "",
-      dark: "",
-    },
+    theme: { light: "", dark: "" },
     variant: {
       default: "text-inherit",
       success: "text-inherit",
@@ -86,21 +73,13 @@ const percentVariants = cva("font-medium tabular-nums", {
 });
 
 export type ProgressBarProps = {
-  /** valor entre 0 e 100 */
   value: number;
-  /** Mostra a faixa com textos acima da barra (padrão: true) */
   showLabels?: boolean;
-  /** Label i18n (esquerda). Padrão: "Carregando ..." */
-  label?: string;
-  /** Força uma classe tailwind no TRILHO (fundo). Entra por último e sobrescreve se necessário */
+  label?: string; // Ex.: "Carregando ..."
   trackClassName?: string;
-  /** Força uma classe tailwind na BARRA (progresso). Entra por último e sobrescreve se necessário */
   progressClassName?: string;
-  /** Classe extra no wrapper */
   className?: string;
-  /** Variante do estilo do texto dos labels (por padrão segue a barra) */
-  labelVariant?: VariantProps<typeof percentVariants>["variant"]; // default|success|danger|warning|info
-  /** Classes extras apenas nos labels (container) */
+  labelVariant?: VariantProps<typeof percentVariants>["variant"];
   labelClassName?: string;
 } & VariantProps<typeof trackVariants> &
   VariantProps<typeof barVariants>;
@@ -124,10 +103,30 @@ export default function ProgressBar({
 }: ProgressBarProps) {
   const pct = Math.max(0, Math.min(100, Number.isFinite(value) ? value : 0));
 
-  // Usa somente cva para variantes; overrides são aplicados por último
+  // Detecta se o label termina com "..."
+  const endsWithEllipsis = useMemo(() => /\.\.\.$/.test(label), [label]);
+  const baseLabel = useMemo(() => (endsWithEllipsis ? label.slice(0, -3) : label), [label, endsWithEllipsis]);
+
+  // Animação dos três pontos: 0 → 1 → 2 → 3 → 0 (0 = sem pontos)
+  const [dotCount, setDotCount] = useState(0);
+  const shouldAnimate = showLabels && pct < 100 && endsWithEllipsis;
+
+  useEffect(() => {
+    if (!shouldAnimate) {
+      // Quando não deve animar, mantém o label estável
+      setDotCount(endsWithEllipsis ? 3 : 0);
+      return;
+    }
+    const id = setInterval(() => {
+      setDotCount((d) => (d + 1) % 4);
+    }, 500); // ajuste fino da velocidade aqui
+    return () => clearInterval(id);
+  }, [shouldAnimate, endsWithEllipsis]);
+
+  const displayLabel = endsWithEllipsis ? `${baseLabel}${".".repeat(dotCount)}` : label;
+
   const trackCls = cx(trackVariants({ theme, density }), trackClassName);
   const barCls = cx(barVariants({ theme, variant }), progressClassName);
-
   const labelsWrap = labelWrapVariants({ theme });
   const percentCls = percentVariants({ theme, variant: labelVariant || variant });
 
@@ -135,8 +134,11 @@ export default function ProgressBar({
     <div className={cx("w-full", className)}>
       {showLabels && (
         <div className={cx(labelsWrap, labelClassName)}>
-          <span>{label}</span>
-          <span className={percentCls}>{pct}%</span>
+          {/* Esconde a mensagem do label quando chega a 100% */}
+          <span aria-live="polite" className={pct === 100 ? "invisible h-0 w-0 overflow-hidden" : undefined}>
+            {pct === 100 ? "" : displayLabel}
+          </span>
+          <span className={percentCls}>{pct === 100 ? "" : `${pct}%`}</span>
         </div>
       )}
 

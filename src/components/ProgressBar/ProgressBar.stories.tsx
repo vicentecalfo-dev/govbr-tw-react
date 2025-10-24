@@ -25,6 +25,10 @@ export const Default = () => {
       </div>
 
       <ProgressBar value={value} />
+
+      <br />
+
+       <ProgressBar value={value} hideLabelOnComplete={false}/>
     </div>
   );
 };
@@ -168,3 +172,5 @@ export const WithoutLabels = () => {
     </div>
   );
 };
+
+

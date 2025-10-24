@@ -81,6 +81,7 @@ export type ProgressBarProps = {
   className?: string;
   labelVariant?: VariantProps<typeof percentVariants>["variant"];
   labelClassName?: string;
+  hideLabelOnComplete?: boolean;
 } & VariantProps<typeof trackVariants> &
   VariantProps<typeof barVariants>;
 
@@ -100,6 +101,7 @@ export default function ProgressBar({
   density,
   labelVariant,
   labelClassName,
+  hideLabelOnComplete = true
 }: ProgressBarProps) {
   const pct = Math.max(0, Math.min(100, Number.isFinite(value) ? value : 0));
 
@@ -135,10 +137,10 @@ export default function ProgressBar({
       {showLabels && (
         <div className={cx(labelsWrap, labelClassName)}>
           {/* Esconde a mensagem do label quando chega a 100% */}
-          <span aria-live="polite" className={pct === 100 ? "invisible h-0 w-0 overflow-hidden" : undefined}>
-            {pct === 100 ? "" : displayLabel}
+          <span aria-live="polite">
+            {pct === 100 && hideLabelOnComplete ? "" : displayLabel}
           </span>
-          <span className={percentCls}>{pct === 100 ? "" : `${pct}%`}</span>
+          <span className={percentCls}>{pct === 100 && hideLabelOnComplete ? "" : `${pct}%`}</span>
         </div>
       )}
 

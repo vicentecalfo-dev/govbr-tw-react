@@ -106,7 +106,13 @@ const youtubeVideosSource: Array<{
     title: "GovBR - Ferramentas de Desenvolvimento",
     description: "Recursos digitais e integracoes com o ecossistema GovBR.",
   },
+   {
+    url: "https://youtu.be/v002H5fbSqE",
+    title: "GovBR - Ferramentas de Desenvolvimento",
+    description: "Recursos digitais e integracoes com o ecossistema GovBR.",
+  },
 ];
+
 
 const youtubeVideoItems: YouTubeVideoItem[] = youtubeVideosSource
   .map((video, index) => {
@@ -380,7 +386,7 @@ export const FullscreenCover: Story = {
 
 export const Videos: Story = {
   args: {
-    className: "max-w-4xl w-full",
+    className: "w-[600px]",
     variant: "light",
     captionMaxLength: 90,
   },

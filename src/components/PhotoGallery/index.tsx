@@ -651,14 +651,17 @@ const lightbox =
               </div>
               <div className="flex h-full w-full min-h-0 flex-1 items-center justify-center p-4 sm:p-6">
                 {activeItem.mediaType === "video" && activeItem.video ? (
-                  <div className="aspect-video w-full max-w-4xl overflow-hidden rounded-md bg-black">
+                  <div
+                    className="relative w-full max-w-4xl overflow-hidden rounded-md bg-black shadow-lg"
+                    style={{ aspectRatio: "16 / 9", maxHeight: "65vh" }}
+                  >
                     <iframe
                       key={activeItem.video.videoId}
                       src={activeItem.video.embedAutoplayUrl}
                       title={videoIframeTitle ?? activeItem.video.videoId}
                       allow="autoplay; encrypted-media; fullscreen; picture-in-picture"
                       allowFullScreen
-                      className="h-full w-full border-0"
+                      className="absolute inset-0 h-full w-full border-0"
                     />
                   </div>
                 ) : (
@@ -763,10 +766,10 @@ const lightbox =
               <div className="flex w-full flex-col">
                 <div
                   className={cn(
-                    "group relative overflow-hidden rounded-lg border",
-                    styles.mainImageWrapper,
+                    "group relative overflow-hidden rounded-lg",
                     activeItem.mediaType === "video" ? "aspect-video" : undefined,
                   )}
+                  style={activeItem.mediaType === "video" ? { maxHeight: "55vh" } : undefined}
                 >
                   {activeItem.mediaType === "video" ? (
                     <img

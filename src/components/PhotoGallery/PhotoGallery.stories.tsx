@@ -59,6 +59,76 @@ type GalleryData = {
 
 let cachedGalleryData: GalleryData | null = null;
 
+const extractYoutubeId = (value: string): string | undefined => {
+  if (!value) {
+    return undefined;
+  }
+  const trimmed = value.trim();
+  const idMatch = trimmed.match(/([a-zA-Z0-9_-]{11})/);
+  return idMatch?.[1];
+};
+
+type YouTubeVideoItem = {
+  id: string;
+  title: string;
+  description: string;
+  videoUrl: string;
+  imageUrl: string;
+  thumbnailUrl: string;
+  mediaType: "video";
+  attributionLabel: string;
+  attributionUrl: string;
+};
+
+const youtubeVideosSource: Array<{
+  url: string;
+  title: string;
+  description: string;
+  attribution?: string;
+}> = [
+  {
+    url: "https://www.youtube.com/watch?v=5mXWxEMSdE4&list=PL01qlDRpvDXdFZ0qYwQPQ1Uew_qkULT8R",
+    title: "Design System GovBR - Episodio 1",
+    description: "Visao geral do design system GovBR e principais componentes.",
+  },
+  {
+    url: "https://youtu.be/zvK3cxUIcOs?list=PL01qlDRpvDXdFZ0qYwQPQ1Uew_qkULT8R",
+    title: "Design System GovBR - Episodio 2",
+    description: "Demonstracao pratica de uso em interfaces responsivas.",
+  },
+  {
+    url: "https://youtu.be/KTUZ-evtRwk?list=PL01qlDRpvDXdFZ0qYwQPQ1Uew_qkULT8R",
+    title: "Design System GovBR - Episodio 3",
+    description: "Componentes de formularios e padroes de acessibilidade.",
+  },
+  {
+    url: "https://youtu.be/q2HnykK78g8",
+    title: "GovBR - Ferramentas de Desenvolvimento",
+    description: "Recursos digitais e integracoes com o ecossistema GovBR.",
+  },
+];
+
+const youtubeVideoItems: YouTubeVideoItem[] = youtubeVideosSource
+  .map((video, index) => {
+    const id = extractYoutubeId(video.url);
+    if (!id) {
+      return undefined;
+    }
+    const thumbnail = `https://img.youtube.com/vi/${id}/hqdefault.jpg`;
+    return {
+      id,
+      title: video.title || `Video ${index + 1}`,
+      description: video.description || "",
+      videoUrl: video.url,
+      imageUrl: thumbnail,
+      thumbnailUrl: thumbnail,
+      mediaType: "video" as const,
+      attributionLabel: video.attribution ?? "YouTube",
+      attributionUrl: video.url,
+    };
+  })
+  .filter((item): item is YouTubeVideoItem => Boolean(item));
+
 const resolveImageUrl = (photo: InaturalistPhoto): string | undefined =>
   photo.large_url ?? photo.medium_url ?? photo.original_url ?? photo.url ?? undefined;
 
@@ -207,6 +277,17 @@ const inaturalistFieldMap: PhotoGalleryFieldMap<EnrichedTaxonPhoto> = {
   attributionUrl: (item) => `${PHOTO_PAGE_BASE_URL}${item.photo.id}`,
 };
 
+const youtubeFieldMap: PhotoGalleryFieldMap<YouTubeVideoItem> = {
+  mediaType: "mediaType",
+  videoUrl: "videoUrl",
+  image: "imageUrl",
+  thumbnail: "thumbnailUrl",
+  title: "title",
+  description: "description",
+  attributionLabel: "attributionLabel",
+  attributionUrl: "attributionUrl",
+};
+
 const meta: Meta<typeof PhotoGallery> = {
   title: "PhotoGallery",
   component: PhotoGallery,
@@ -294,6 +375,27 @@ export const FullscreenCover: Story = {
     }
 
     return <PhotoGallery {...args} items={defaultItems} />;
+  },
+};
+
+export const Videos: Story = {
+  args: {
+    className: "max-w-4xl w-full",
+    variant: "light",
+    captionMaxLength: 90,
+  },
+  render: (args) => {
+    if (youtubeVideoItems.length === 0) {
+      return <div>Nenhum video disponivel.</div>;
+    }
+
+    return (
+      <PhotoGallery<YouTubeVideoItem>
+        {...args}
+        fieldMap={youtubeFieldMap}
+        items={youtubeVideoItems}
+      />
+    );
   },
 };
 

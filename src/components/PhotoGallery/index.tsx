@@ -8,7 +8,7 @@ import React, {
 } from "react";
 import { createPortal } from "react-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faChevronLeft, faChevronRight, faXmark } from "@fortawesome/free-solid-svg-icons";
+import { faChevronLeft, faChevronRight, faPlay, faXmark } from "@fortawesome/free-solid-svg-icons";
 
 import { cn } from "../../libs/utils";
 import { Button, type ButtonProps } from "../Button";
@@ -111,7 +111,7 @@ export type PhotoGalleryFieldMap<TItem> = {
   /**
    * Path or getter that resolves to the full sized image URL.
    */
-  image: FieldSelector<TItem>;
+  image?: FieldSelector<TItem>;
   /**
    * Path or getter for the thumbnail image URL. Falls back to the `image` value.
    */
@@ -132,6 +132,22 @@ export type PhotoGalleryFieldMap<TItem> = {
    * Path or getter for the attribution URL.
    */
   attributionUrl?: FieldSelector<TItem>;
+  /**
+   * Path or getter that indicates the media type ("image" | "video").
+   */
+  mediaType?: FieldSelector<TItem>;
+  /**
+   * Path or getter for the video URL (e.g., YouTube).
+   */
+  videoUrl?: FieldSelector<TItem>;
+  /**
+   * Path or getter for the video identifier (e.g., YouTube video ID).
+   */
+  videoId?: FieldSelector<TItem>;
+  /**
+   * Path or getter for the video provider (e.g., "youtube").
+   */
+  videoProvider?: FieldSelector<TItem>;
 };
 
 export interface PhotoGalleryProps<TItem = Record<string, unknown>>
@@ -170,13 +186,23 @@ export interface PhotoGalleryProps<TItem = Record<string, unknown>>
   labels?: Partial<PhotoGalleryLabels>;
 }
 
+type NormalizedVideoInfo = {
+  provider: "youtube";
+  videoId: string;
+  url: string;
+  embedUrl: string;
+  embedAutoplayUrl: string;
+};
+
 type NormalizedGalleryItem = {
-  image: string;
+  mediaType: "image" | "video";
+  image?: string;
   thumbnail: string;
   title?: string;
   description?: string;
   attributionLabel?: string;
   attributionUrl?: string;
+  video?: NormalizedVideoInfo;
 };
 
 const DEFAULT_FIELD_MAP: PhotoGalleryFieldMap<Record<string, unknown>> = {
@@ -186,6 +212,10 @@ const DEFAULT_FIELD_MAP: PhotoGalleryFieldMap<Record<string, unknown>> = {
   description: "description",
   attributionLabel: "attributionLabel",
   attributionUrl: "attributionUrl",
+  mediaType: "mediaType",
+  videoUrl: "videoUrl",
+  videoId: "videoId",
+  videoProvider: "videoProvider",
 };
 
 export type PhotoGalleryLabels = {
@@ -202,6 +232,9 @@ export type PhotoGalleryLabels = {
   fullscreenImageAlt: string;
   thumbnailAlt: string;
   thumbnailButton: string;
+  openVideoLightbox: string;
+  videoPreviewAlt: string;
+  videoIframeTitle: string;
 };
 
 const DEFAULT_LABELS: PhotoGalleryLabels = {
@@ -218,6 +251,9 @@ const DEFAULT_LABELS: PhotoGalleryLabels = {
   fullscreenImageAlt: "Imagem em tela cheia {{title}}",
   thumbnailAlt: "Miniatura {{index}} {{title}}",
   thumbnailButton: "Selecionar imagem {{index}} {{title}}",
+  openVideoLightbox: "Assistir video {{title}} em tela cheia",
+  videoPreviewAlt: "Miniatura do video {{title}}",
+  videoIframeTitle: "Player do video {{title}}",
 };
 
 const formatLabel = (template: string, replacements: Record<string, string | number>): string => {
@@ -247,6 +283,37 @@ const truncateText = (value: string | undefined, maxLength: number): string | un
     return "...".slice(0, maxLength);
   }
   return `${value.slice(0, maxLength - 3).trimEnd()}...`;
+};
+
+const YOUTUBE_ID_REGEX = /^[a-zA-Z0-9_-]{11}$/;
+
+const extractYouTubeId = (value: string | undefined): string | undefined => {
+  if (!value) {
+    return undefined;
+  }
+  const trimmed = value.trim();
+  if (YOUTUBE_ID_REGEX.test(trimmed)) {
+    return trimmed;
+  }
+
+  const url = new URL(trimmed, "https://youtube.com");
+  const directId = url.searchParams.get("v");
+  if (directId && YOUTUBE_ID_REGEX.test(directId)) {
+    return directId;
+  }
+
+  const path = url.pathname;
+  const embedMatch = path.match(/\/embed\/([a-zA-Z0-9_-]{11})/);
+  if (embedMatch?.[1]) {
+    return embedMatch[1];
+  }
+
+  const shortMatch = path.match(/\/([a-zA-Z0-9_-]{11})$/);
+  if (shortMatch?.[1]) {
+    return shortMatch[1];
+  }
+
+  return undefined;
 };
 
 const splitPath = (path: string) =>
@@ -341,37 +408,113 @@ export function PhotoGallery<TItem = Record<string, unknown>>({
 
   const normalizedItems = useMemo<NormalizedGalleryItem[]>(() => {
     return items.reduce<NormalizedGalleryItem[]>((acc, item) => {
+      const mediaTypeValue = resolveFieldValue(item, map.mediaType);
+      const mediaType =
+        mediaTypeValue === "video" || mediaTypeValue === "Video" ? "video" : "image";
+
       const imageValue = resolveFieldValue(item, map.image);
-      if (typeof imageValue !== "string") {
-        return acc;
-      }
-
-      const image = imageValue.trim();
-      if (image.length === 0) {
-        return acc;
-      }
-
       const thumbnailValue = resolveFieldValue(item, map.thumbnail);
       const titleValue = resolveFieldValue(item, map.title);
       const descriptionValue = resolveFieldValue(item, map.description);
       const attributionLabelValue = resolveFieldValue(item, map.attributionLabel);
       const attributionUrlValue = resolveFieldValue(item, map.attributionUrl);
 
-      const normalized: NormalizedGalleryItem = {
-        image,
-        thumbnail:
+      const baseTitle = typeof titleValue === "string" ? titleValue : undefined;
+      const baseDescription =
+        typeof descriptionValue === "string" ? descriptionValue : undefined;
+      const baseAttributionLabel =
+        typeof attributionLabelValue === "string" ? attributionLabelValue : undefined;
+      const baseAttributionUrl =
+        typeof attributionUrlValue === "string" ? attributionUrlValue : undefined;
+
+      if (mediaType === "video") {
+        const providerValue = resolveFieldValue(item, map.videoProvider);
+        const provider =
+          typeof providerValue === "string" ? providerValue.toLowerCase().trim() : "youtube";
+        if (provider !== "youtube") {
+          return acc;
+        }
+
+        const videoUrlValue = resolveFieldValue(item, map.videoUrl);
+        const videoIdValue = resolveFieldValue(item, map.videoId);
+
+        const resolvedVideoUrl =
+          typeof videoUrlValue === "string" ? videoUrlValue.trim() : undefined;
+        const videoIdFromField =
+          typeof videoIdValue === "string" && videoIdValue.trim().length > 0
+            ? videoIdValue.trim()
+            : undefined;
+        const videoId = videoIdFromField ?? extractYouTubeId(resolvedVideoUrl);
+        if (!videoId) {
+          return acc;
+        }
+
+        const thumbnailCandidate =
           typeof thumbnailValue === "string" && thumbnailValue.trim().length > 0
             ? thumbnailValue.trim()
-            : image,
-        title: typeof titleValue === "string" ? titleValue : undefined,
-        description: typeof descriptionValue === "string" ? descriptionValue : undefined,
-        attributionLabel:
-          typeof attributionLabelValue === "string" ? attributionLabelValue : undefined,
-        attributionUrl:
-          typeof attributionUrlValue === "string" ? attributionUrlValue : undefined,
-      };
+            : undefined;
 
-      acc.push(normalized);
+        const imageCandidate =
+          typeof imageValue === "string" && imageValue.trim().length > 0
+            ? imageValue.trim()
+            : undefined;
+
+        const thumbnail =
+          thumbnailCandidate ??
+          imageCandidate ??
+          `https://img.youtube.com/vi/${videoId}/hqdefault.jpg`;
+
+        const image = imageCandidate ?? thumbnail;
+        if (!thumbnail) {
+          return acc;
+        }
+
+        const embedBase = `https://www.youtube.com/embed/${videoId}`;
+        const embedUrl = `${embedBase}?rel=0`;
+        const embedAutoplayUrl = `${embedBase}?autoplay=1&rel=0`;
+
+        acc.push({
+          mediaType: "video",
+          image,
+          thumbnail,
+          title: baseTitle,
+          description: baseDescription,
+          attributionLabel: baseAttributionLabel,
+          attributionUrl: baseAttributionUrl,
+          video: {
+            provider: "youtube",
+            videoId,
+            url: resolvedVideoUrl ?? `https://www.youtube.com/watch?v=${videoId}`,
+            embedUrl,
+            embedAutoplayUrl,
+          },
+        });
+        return acc;
+      }
+
+      const resolvedImage =
+        typeof imageValue === "string" && imageValue.trim().length > 0
+          ? imageValue.trim()
+          : undefined;
+
+      if (!resolvedImage) {
+        return acc;
+      }
+
+      const thumbnail =
+        typeof thumbnailValue === "string" && thumbnailValue.trim().length > 0
+          ? thumbnailValue.trim()
+          : resolvedImage;
+
+      acc.push({
+        mediaType: "image",
+        image: resolvedImage,
+        thumbnail,
+        title: baseTitle,
+        description: baseDescription,
+        attributionLabel: baseAttributionLabel,
+        attributionUrl: baseAttributionUrl,
+      });
       return acc;
     }, []);
   }, [items, map]);
@@ -395,15 +538,28 @@ export function PhotoGallery<TItem = Record<string, unknown>>({
     activeItem?.description != null
       ? truncateText(activeItem.description, resolvedCaptionLength)
       : undefined;
-  const mainImageAlt = activeItem
-    ? formatLabel(resolvedLabels.selectedImageAlt, { title: activeItem.title ?? "" })
-    : resolvedLabels.selectedImageAlt;
-  const fullscreenImageAlt = activeItem
-    ? formatLabel(resolvedLabels.fullscreenImageAlt, { title: activeItem.title ?? "" })
-    : resolvedLabels.fullscreenImageAlt;
-  const openLightboxLabel = activeItem
-    ? formatLabel(resolvedLabels.openLightbox, { title: activeItem.title ?? "" })
-    : resolvedLabels.openLightbox;
+  const mainImageAlt =
+    activeItem?.mediaType === "image"
+      ? formatLabel(resolvedLabels.selectedImageAlt, { title: activeItem.title ?? "" })
+      : undefined;
+  const videoPreviewAlt =
+    activeItem?.mediaType === "video"
+      ? formatLabel(resolvedLabels.videoPreviewAlt, { title: activeItem.title ?? "" })
+      : undefined;
+  const fullscreenImageAlt =
+    activeItem?.mediaType === "image"
+      ? formatLabel(resolvedLabels.fullscreenImageAlt, { title: activeItem.title ?? "" })
+      : undefined;
+  const videoIframeTitle =
+    activeItem?.mediaType === "video"
+      ? formatLabel(resolvedLabels.videoIframeTitle, {
+          title: activeItem.title ?? activeItem.video?.videoId ?? "",
+        })
+      : undefined;
+  const openLightboxLabel =
+    activeItem?.mediaType === "video"
+      ? formatLabel(resolvedLabels.openVideoLightbox, { title: activeItem.title ?? "" })
+      : formatLabel(resolvedLabels.openLightbox, { title: activeItem?.title ?? "" });
 
   const goToIndex = useCallback(
     (index: number) => {
@@ -494,14 +650,24 @@ const lightbox =
                 </Button>
               </div>
               <div className="flex h-full w-full min-h-0 flex-1 items-center justify-center p-4 sm:p-6">
-                <img
-                  src={activeItem.image}
-                  alt={fullscreenImageAlt}
-                  className={cn(
-                    "max-h-[65vh] max-w-full rounded-md",
-                    overlayImageClass,
-                  )}
-                />
+                {activeItem.mediaType === "video" && activeItem.video ? (
+                  <div className="aspect-video w-full max-w-4xl overflow-hidden rounded-md bg-black">
+                    <iframe
+                      key={activeItem.video.videoId}
+                      src={activeItem.video.embedAutoplayUrl}
+                      title={videoIframeTitle ?? activeItem.video.videoId}
+                      allow="autoplay; encrypted-media; fullscreen; picture-in-picture"
+                      allowFullScreen
+                      className="h-full w-full border-0"
+                    />
+                  </div>
+                ) : (
+                  <img
+                    src={activeItem.image ?? activeItem.thumbnail}
+                    alt={fullscreenImageAlt}
+                    className={cn("max-h-[65vh] max-w-full rounded-md", overlayImageClass)}
+                  />
+                )}
               </div>
               <div className="relative w-full min-h-0">
                 <div
@@ -594,17 +760,46 @@ const lightbox =
                 </Button>
               </div>
 
-              <button
-                type="button"
-                className="group relative flex w-full cursor-zoom-in flex-col items-center justify-center"
-                onClick={() => setIsLightboxOpen(true)}
-                aria-label={openLightboxLabel}
-              >
-                <img
-                  src={activeItem.image}
-                  alt={mainImageAlt}
-                  className="max-h-[55vh] w-full object-cover transition-transform duration-300 group-hover:scale-[1.01] sm:max-h-[480px]"
-                />
+              <div className="flex w-full flex-col">
+                <div
+                  className={cn(
+                    "group relative overflow-hidden rounded-lg border",
+                    styles.mainImageWrapper,
+                    activeItem.mediaType === "video" ? "aspect-video" : undefined,
+                  )}
+                >
+                  {activeItem.mediaType === "video" ? (
+                    <img
+                      src={activeItem.image ?? activeItem.thumbnail}
+                      alt={videoPreviewAlt ?? ""}
+                      className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-[1.01]"
+                    />
+                  ) : (
+                    <img
+                      src={activeItem.image ?? activeItem.thumbnail}
+                      alt={mainImageAlt}
+                      className="max-h-[55vh] w-full object-cover transition-transform duration-300 group-hover:scale-[1.01] sm:max-h-[480px]"
+                    />
+                  )}
+                  <button
+                    type="button"
+                    className={cn(
+                      "absolute inset-0 focus:outline-none focus-visible:ring-2 focus-visible:ring-govbr-blue-warm-vivid-50",
+                      activeItem.mediaType === "video" ? "cursor-pointer" : "cursor-zoom-in",
+                    )}
+                    onClick={() => setIsLightboxOpen(true)}
+                    aria-label={openLightboxLabel}
+                  >
+                    <span className="sr-only">{openLightboxLabel}</span>
+                  </button>
+                  {activeItem.mediaType === "video" ? (
+                    <div className="pointer-events-none absolute inset-0 flex items-center justify-center">
+                      <div className="flex h-16 w-16 items-center justify-center rounded-full bg-black/60 text-white shadow-lg transition-transform duration-300 group-hover:scale-105">
+                        <FontAwesomeIcon icon={faPlay} className="text-2xl" />
+                      </div>
+                    </div>
+                  ) : null}
+                </div>
                 <div
                   className={cn(
                     "w-full border-t px-4 py-4 text-left sm:px-6 sm:py-4",
@@ -643,7 +838,7 @@ const lightbox =
                     </p>
                   ) : null}
                 </div>
-              </button>
+              </div>
             </div>
 
             <div className="relative">
@@ -692,15 +887,21 @@ const lightbox =
                     index: displayIndex,
                     title: item.title ?? "",
                   });
-                  const thumbnailAlt = formatLabel(resolvedLabels.thumbnailAlt, {
-                    index: displayIndex,
-                    title: item.title ?? "",
-                  });
+                  const thumbnailAltBase =
+                    item.mediaType === "video"
+                      ? formatLabel(resolvedLabels.videoPreviewAlt, {
+                          index: displayIndex,
+                          title: item.title ?? "",
+                        })
+                      : formatLabel(resolvedLabels.thumbnailAlt, {
+                          index: displayIndex,
+                          title: item.title ?? "",
+                        });
                   const fallbackThumbnailAlt =
-                    thumbnailAlt || item.title || `Miniatura ${displayIndex}`;
+                    thumbnailAltBase || item.title || `Miniatura ${displayIndex}`;
                   return (
                     <button
-                      key={`${item.image}-${index}`}
+                      key={`${item.thumbnail}-${index}`}
                       type="button"
                       onClick={() => goToIndex(index)}
                       className={cn(
@@ -714,6 +915,13 @@ const lightbox =
                         alt={fallbackThumbnailAlt}
                         className="h-full w-full object-cover"
                       />
+                      {item.mediaType === "video" ? (
+                        <div className="pointer-events-none absolute inset-0 flex items-center justify-center">
+                          <div className="flex h-10 w-10 items-center justify-center rounded-full bg-black/60 text-white shadow-md">
+                            <FontAwesomeIcon icon={faPlay} className="text-lg" />
+                          </div>
+                        </div>
+                      ) : null}
                     </button>
                   );
                 })}

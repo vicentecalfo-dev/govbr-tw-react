@@ -38,6 +38,8 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { Avatar } from "../Avatar";
 import Breadcrumb from "../Breadcrumb";
+import { GovBRLogo } from "../GovBRLogo";
+import { Button } from "../Button";
 
 export default {
   title: "Sidebar",
@@ -49,14 +51,17 @@ const SidebarBrand: React.FC = () => {
     <div
       className={`flex w-full items-center ${isIconCollapsed ? "justify-center" : "gap-3"}`}
     >
-      <Avatar
+      {/* <Avatar
         variant="initials"
         title="Design System"
         size="small"
         className="flex-shrink-0 aspect-square bg-govbr-blue-warm-vivid-70 text-govbr-pure-0"
       >
         BR
-      </Avatar>
+      </Avatar> */}
+      <div className="size-16 flex items-center">
+      <GovBRLogo />
+      </div>
       {!isIconCollapsed ? (
         <div className="flex flex-col">
           <span className="text-sm font-semibold text-govbr-gray-80">Design System</span>
@@ -191,8 +196,10 @@ const OverviewSidebar = () => (
       <div className="flex min-h-dvh flex-col">
           <header className="flex flex-wrap items-center px-6 pt-3 gap-3">
             <SidebarTrigger />
-            <Breadcrumb className="text-xs">
-              <span>Inicio</span>
+            <Breadcrumb className="text-sm">
+              <Button size="icon" variant="ghost">
+      <FontAwesomeIcon icon={faHouse} />
+    </Button>
               <span>Painel</span>
               <span>Resumo</span>
             </Breadcrumb>

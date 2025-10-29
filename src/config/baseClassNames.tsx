@@ -13,6 +13,12 @@ const BASE_CLASSNAMES: Record<string, Record<string, string>> = {
     stars: "govbr-rating-stars",
     value: "govbr-rating-value",
   },
+  searchBox: {
+    root: "govbr-searchbox",
+    panel: "govbr-searchbox-panel",
+    option: "govbr-searchbox-option",
+    icon: "govbr-searchbox-icon",
+  },
   avatarGroup: {
     root: "govbr-avatar-group",
     item: "govbr-avatar-group-item",

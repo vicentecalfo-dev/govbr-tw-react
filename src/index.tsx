@@ -3,6 +3,7 @@ import { Avatar } from "./components/Avatar";
 import { AvatarGroup } from "./components/AvatarGroup";
 import { Persona } from "./components/Persona";
 import { Rating } from "./components/Rating";
+import { SearchBox } from "./components/SearchBox";
 import Badge from "./components/Badge";
 import Breadcrumb from "./components/Breadcrumb";
 import { Button } from "./components/Button";
@@ -58,6 +59,7 @@ export {
     AvatarGroup,
     Persona,
     Rating,
+    SearchBox,
     Badge,
     Breadcrumb,
     Button,

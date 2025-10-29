@@ -2,6 +2,12 @@ const BASE_CLASSNAMES: Record<string, Record<string, string>> = {
   avatar: {
     root: "govbr-avatar",
   },
+  avatarGroup: {
+    root: "govbr-avatar-group",
+    item: "govbr-avatar-group-item",
+    stacked: "govbr-avatar-group-stacked",
+    overflow: "govbr-avatar-group-overflow",
+  },
   button: {
     root: "govbr-button",
   },

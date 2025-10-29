@@ -1,5 +1,6 @@
 import Accordion from "./components/Accordion";
 import { Avatar } from "./components/Avatar";
+import { AvatarGroup } from "./components/AvatarGroup";
 import Badge from "./components/Badge";
 import Breadcrumb from "./components/Breadcrumb";
 import { Button } from "./components/Button";
@@ -52,6 +53,7 @@ import Toaster from "./components/Toaster";
 export {
     Accordion,
     Avatar,
+    AvatarGroup,
     Badge,
     Breadcrumb,
     Button,

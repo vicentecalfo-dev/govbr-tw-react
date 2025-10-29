@@ -1,6 +1,7 @@
 import Accordion from "./components/Accordion";
 import { Avatar } from "./components/Avatar";
 import { AvatarGroup } from "./components/AvatarGroup";
+import { Persona } from "./components/Persona";
 import Badge from "./components/Badge";
 import Breadcrumb from "./components/Breadcrumb";
 import { Button } from "./components/Button";
@@ -54,6 +55,7 @@ export {
     Accordion,
     Avatar,
     AvatarGroup,
+    Persona,
     Badge,
     Breadcrumb,
     Button,

@@ -8,6 +8,10 @@ const BASE_CLASSNAMES: Record<string, Record<string, string>> = {
   buttonGroup: {
     root: "govbr-button-group",
   },
+  copyAction: {
+    root: "govbr-copy-action",
+    trigger: "govbr-copy-action-trigger",
+  },
   spinner: {
     root: "govbr-spinner",
   },

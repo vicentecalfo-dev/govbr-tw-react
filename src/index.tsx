@@ -4,6 +4,7 @@ import Badge from "./components/Badge";
 import Breadcrumb from "./components/Breadcrumb";
 import { Button } from "./components/Button";
 import { ButtonGroup } from "./components/ButtonGroup";
+import { CopyAction } from "./components/CopyAction";
 import CarouselSlider from "./components/CarouselSlider";
 import Item from "./components/Item";
 import Card from "./components/Card";
@@ -55,6 +56,7 @@ export {
     Breadcrumb,
     Button,
     ButtonGroup,
+    CopyAction,
     CarouselSlider,
     Item,
     Card,

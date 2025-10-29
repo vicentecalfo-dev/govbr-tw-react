@@ -5,6 +5,7 @@ import {
   faBell,
   faCheck,
   faClone,
+  faEllipsisV,
   faEnvelope,
   faFilePdf,
   faFolder,
@@ -52,7 +53,9 @@ const MenuExample = ({
   const menu = (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="outline">Abrir menu</Button>
+        <Button size="icon">
+          <FontAwesomeIcon icon={faEllipsisV} />
+        </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent side={contentSide} className="w-56">
         <DropdownMenuLabel inset={resolvedInset}>Conta</DropdownMenuLabel>
@@ -200,7 +203,7 @@ export const Playground: Story = {
     withIcons: false,
   },
   render: (args) => (
-    <div className="flex h-80 items-center justify-center bg-govbr-gray-2 p-6">
+    <div className="flex items-center justify-center bg-govbr-gray-2 p-6">
       <MenuExample {...args} />
     </div>
   ),
@@ -312,7 +315,7 @@ export const WithInsetItems: Story = {
     withIcons: false,
   },
   render: (args) => (
-    <div className="flex h-64 items-center justify-center bg-govbr-gray-2 p-6">
+    <div className="flex items-center justify-center bg-govbr-gray-2 p-6">
       <MenuExample {...args} />
     </div>
   ),
@@ -320,7 +323,7 @@ export const WithInsetItems: Story = {
 
 export const SubmenuWithItems: Story = {
   render: () => (
-    <div className="flex h-64 items-center justify-center bg-govbr-gray-2 p-6">
+    <div className="flex items-center justify-center bg-govbr-gray-2 p-6">
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button variant="outline">Acoes</Button>

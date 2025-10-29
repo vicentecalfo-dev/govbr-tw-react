@@ -8,6 +8,11 @@ const BASE_CLASSNAMES: Record<string, Record<string, string>> = {
     info: "govbr-persona-info",
     action: "govbr-persona-action",
   },
+  rating: {
+    root: "govbr-rating",
+    stars: "govbr-rating-stars",
+    value: "govbr-rating-value",
+  },
   avatarGroup: {
     root: "govbr-avatar-group",
     item: "govbr-avatar-group-item",

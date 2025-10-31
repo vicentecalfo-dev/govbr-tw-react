@@ -24,16 +24,16 @@ const treeVariants = cva("flex flex-col gap-1 text-sm", {
 });
 
 const treeItemVariants = cva(
-  "flex w-full items-center gap-2 rounded-md transition-colors",
+  "flex w-full items-center gap-2 rounded-md transition-colors cursor-pointer",
   {
     variants: {
       variant: {
-        default: "hover:bg-govbr-blue-warm-10/40",
-        danger: "hover:bg-govbr-red-vivid-10/60",
-        success: "hover:bg-govbr-green-cool-vivid-10/60",
-        warning: "hover:bg-govbr-yellow-vivid-10/70",
-        dark: "hover:bg-govbr-blue-warm-80/50",
-        featured: "hover:bg-govbr-blue-warm-10/40",
+        default: "hover:bg-govbr-gray-2",
+        danger: "hover:bg-govbr-gray-2",
+        success: "hover:bg-govbr-gray-2",
+        warning: "hover:bg-govbr-gray-2",
+        dark: "hover:bg-govbr-gray-2/40",
+        featured: "hover:bg-govbr-gray-2",
       },
       density: {
         lowest: "min-h-14 px-2",
@@ -89,10 +89,10 @@ const treeToggleVariants = cva(
           "hover:bg-govbr-blue-warm-10/70 focus-visible:outline-govbr-blue-warm-vivid-60",
       },
       density: {
-        lowest: "h-8 w-8",
-        low: "h-7 w-7",
-        default: "h-6 w-6",
-        high: "h-5 w-5",
+        lowest: "h-10 w-10",
+        low: "h-9 w-9",
+        default: "h-8 w-8",
+        high: "h-7 w-7",
       },
     },
     defaultVariants: {
@@ -105,10 +105,10 @@ const treeToggleVariants = cva(
 const treeIconWrapperVariants = cva("flex shrink-0 items-center justify-center", {
   variants: {
     density: {
-      lowest: "h-8 w-8",
-      low: "h-7 w-7",
-      default: "h-6 w-6",
-      high: "h-5 w-5",
+      lowest: "h-9 w-9",
+      low: "h-8 w-8",
+      default: "h-7 w-7",
+      high: "h-6 w-6",
     },
   },
   defaultVariants: {

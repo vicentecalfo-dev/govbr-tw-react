@@ -5,10 +5,18 @@ import React, {
   isValidElement,
   useCallback,
   useContext,
+  useEffect,
+  useLayoutEffect,
   useMemo,
+  useRef,
   useState,
 } from "react";
-import { faChevronDown, faChevronRight } from "@fortawesome/free-solid-svg-icons";
+import {
+  faChevronDown,
+  faChevronRight,
+  faFolder,
+  faFolderOpen,
+} from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import type { IconDefinition } from "@fortawesome/fontawesome-svg-core";
 import { VariantProps } from "class-variance-authority";
@@ -23,6 +31,9 @@ import {
   treeVariants,
 } from "./variants";
 
+const useIsomorphicLayoutEffect =
+  typeof window !== "undefined" ? useLayoutEffect : useEffect;
+
 type TreeDensity = NonNullable<VariantProps<typeof treeVariants>["density"]>;
 type TreeVariant = NonNullable<VariantProps<typeof treeVariants>["variant"]>;
 
@@ -36,12 +47,60 @@ type TreeIconProp =
   | ReactNode
   | ((iconClassName: string) => ReactNode);
 
+interface TreeBranchRenderParams {
+  type: "branch";
+  level: number;
+  label: ReactNode;
+  icon?: TreeIconProp;
+  collapsedIcon?: TreeIconProp;
+  expandedIcon?: TreeIconProp;
+  iconClassName: string;
+  defaultNode: ReactNode;
+  expanded: boolean;
+  hasChildren: boolean;
+  disabled: boolean;
+  toggle: (event?: React.MouseEvent<HTMLButtonElement>) => void;
+  onSelect?: (event: React.MouseEvent<HTMLButtonElement>) => void;
+  density: TreeDensity;
+  variant: TreeVariant;
+  iconNode: ReactNode;
+  collapsedIconNode: ReactNode;
+  expandedIconNode: ReactNode;
+  toggleIconNode: ReactNode;
+  content: ReactNode;
+  group: ReactNode | null;
+  containerProps: React.LiHTMLAttributes<HTMLLIElement>;
+}
+
+interface TreeLeafRenderParams {
+  type: "leaf";
+  level: number;
+  label: ReactNode;
+  icon?: TreeIconProp;
+  iconClassName: string;
+  defaultNode: ReactNode;
+  disabled: boolean;
+  onSelect?: (event: React.MouseEvent<HTMLButtonElement>) => void;
+  density: TreeDensity;
+  variant: TreeVariant;
+  iconNode: ReactNode;
+  content: ReactNode;
+  containerProps: React.LiHTMLAttributes<HTMLLIElement>;
+}
+
+type TreeRenderItem = (
+  params: TreeBranchRenderParams | TreeLeafRenderParams,
+) => ReactNode;
+
 interface TreeContextValue {
   density: TreeDensity;
   variant: TreeVariant;
   iconClassName: string;
   indent: number;
   renderToggleIcon: IconRenderer;
+  renderItem?: TreeRenderItem;
+  branchCollapsedIcon: TreeIconProp;
+  branchExpandedIcon: TreeIconProp;
 }
 
 const TreeConfigContext = React.createContext<TreeContextValue | undefined>(
@@ -65,6 +124,9 @@ export interface TreeProps
   iconClassName?: string;
   indent?: number;
   renderToggleIcon?: IconRenderer;
+  renderItem?: TreeRenderItem;
+  branchCollapsedIcon?: TreeIconProp;
+  branchExpandedIcon?: TreeIconProp;
 }
 
 const defaultToggleIcon: IconRenderer = ({ expanded, iconClassName }) => (
@@ -77,9 +139,12 @@ const defaultToggleIcon: IconRenderer = ({ expanded, iconClassName }) => (
 const Tree = ({
   density = "default",
   variant = "default",
-  iconClassName = "text-govbr-gray-60",
+  iconClassName = "text-govbr-blue-warm-vivid-70 text-lg",
   indent = 16,
   renderToggleIcon = defaultToggleIcon,
+  renderItem,
+  branchCollapsedIcon = faFolder,
+  branchExpandedIcon = faFolderOpen,
   className,
   children,
   ...props
@@ -91,8 +156,20 @@ const Tree = ({
       iconClassName,
       indent,
       renderToggleIcon,
+      renderItem,
+      branchCollapsedIcon,
+      branchExpandedIcon,
     }),
-    [density, variant, iconClassName, indent, renderToggleIcon]
+    [
+      density,
+      variant,
+      iconClassName,
+      indent,
+      renderToggleIcon,
+      renderItem,
+      branchCollapsedIcon,
+      branchExpandedIcon,
+    ],
   );
 
   return (
@@ -142,7 +219,7 @@ const renderIcon = (icon: TreeIconProp | undefined, iconClassName: string) => {
 };
 
 interface TreeBranchProps
-  extends Omit<React.HTMLAttributes<HTMLDivElement>, "children"> {
+  extends Omit<React.LiHTMLAttributes<HTMLLIElement>, "children"> {
   label: ReactNode;
   children?: ReactNode;
   defaultExpanded?: boolean;
@@ -151,12 +228,15 @@ interface TreeBranchProps
   onToggle?: (expanded: boolean) => void;
   toggleIconClassName?: string;
   icon?: TreeIconProp;
+  iconCollapsed?: TreeIconProp;
+  iconExpanded?: TreeIconProp;
   iconClassName?: string;
   labelClassName?: string;
   toggleIcon?: IconRenderer;
   onSelect?: (event: React.MouseEvent<HTMLButtonElement>) => void;
   disabled?: boolean;
   expandOnLabelClick?: boolean;
+  renderItem?: (params: TreeBranchRenderParams) => ReactNode;
 }
 
 const TreeBranch = ({
@@ -168,21 +248,36 @@ const TreeBranch = ({
   onToggle,
   toggleIconClassName,
   icon,
+  iconCollapsed,
+  iconExpanded,
   iconClassName,
   labelClassName,
   toggleIcon,
   onSelect,
   disabled = false,
   expandOnLabelClick = true,
+  renderItem,
   className,
   ...props
 }: TreeBranchProps) => {
-  const { density, variant, iconClassName: contextIconClass, indent, renderToggleIcon } =
-    useTreeConfig();
+  const {
+    density,
+    variant,
+    iconClassName: contextIconClass,
+    indent,
+    renderToggleIcon,
+    renderItem: contextRenderItem,
+    branchCollapsedIcon: contextBranchCollapsedIcon,
+    branchExpandedIcon: contextBranchExpandedIcon,
+  } = useTreeConfig();
   const level = useTreeLevel();
   const isControlled = expanded !== undefined;
   const [internalExpanded, setInternalExpanded] = useState(defaultExpanded);
   const isExpanded = isControlled ? !!expanded : internalExpanded;
+  const hasChildren = React.Children.count(children) > 0;
+
+  const contentRef = useRef<HTMLUListElement>(null);
+  const [contentHeight, setContentHeight] = useState(0);
 
   const handleToggle = useCallback(
     (event?: React.MouseEvent<HTMLButtonElement>) => {
@@ -209,6 +304,37 @@ const TreeBranch = ({
     ]
   );
 
+  const measureHeight = useCallback(() => {
+    const node = contentRef.current;
+    if (!node) {
+      return;
+    }
+    const previous = node.style.maxHeight;
+    node.style.maxHeight = "none";
+    const height = node.scrollHeight;
+    node.style.maxHeight = previous;
+    setContentHeight(height);
+  }, []);
+
+  useIsomorphicLayoutEffect(() => {
+    if (!hasChildren) {
+      setContentHeight(0);
+      return;
+    }
+    measureHeight();
+  }, [measureHeight, hasChildren, children, isExpanded, density]);
+
+  useEffect(() => {
+    if (!hasChildren || typeof window === "undefined") {
+      return;
+    }
+    const handleResize = () => measureHeight();
+    window.addEventListener("resize", handleResize);
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, [hasChildren, measureHeight]);
+
   const paddingStyle: CSSProperties =
     level > 0 ? { marginLeft: level * indent } : {};
 
@@ -229,90 +355,161 @@ const TreeBranch = ({
     </span>
   );
 
-  return (
-    <li
-      role="treeitem"
-      aria-expanded={isExpanded}
-      className="list-none"
-      {...props}
+  const collapsedIcon =
+    iconCollapsed ?? icon ?? (hasChildren ? contextBranchCollapsedIcon : undefined);
+  const expandedIcon =
+    iconExpanded ?? icon ?? (hasChildren ? contextBranchExpandedIcon : undefined);
+
+  const collapsedIconNode = renderIcon(collapsedIcon, mergedItemIconClass);
+  const expandedIconNode = renderIcon(expandedIcon, mergedItemIconClass);
+  const iconNode = isExpanded
+    ? expandedIconNode ?? collapsedIconNode
+    : collapsedIconNode ?? expandedIconNode;
+  const toggleIconNode = toggleRenderer({
+    expanded: isExpanded,
+    iconClassName: mergedToggleIconClass,
+  });
+
+  const content = (
+    <div
+      className={cn(
+        treeItemVariants({ variant, density, disabled }),
+        BASE_CLASSNAMES.tree.item,
+        className
+      )}
+      style={paddingStyle}
     >
-      <div
+      <button
+        type="button"
         className={cn(
-          treeItemVariants({ variant, density, disabled }),
-          BASE_CLASSNAMES.tree.item,
-          className
+          treeToggleVariants({ variant, density }),
+          BASE_CLASSNAMES.tree.toggle
         )}
-        style={paddingStyle}
+        onClick={handleToggle}
+        disabled={disabled}
+        aria-label={isExpanded ? "Recolher" : "Expandir"}
       >
+        {toggleIconNode}
+      </button>
+      <span
+        className={cn(
+          treeIconWrapperVariants({ density }),
+          BASE_CLASSNAMES.tree.icon
+        )}
+      >
+        {iconNode}
+      </span>
+      {onSelect ? (
         <button
           type="button"
-          className={cn(
-            treeToggleVariants({ variant, density }),
-            BASE_CLASSNAMES.tree.toggle
-          )}
-          onClick={handleToggle}
+          className="flex flex-1 items-center gap-2 text-left"
+          onClick={(event) => {
+            if (expandOnLabelClick) {
+              handleToggle(event);
+            }
+            onSelect(event);
+          }}
           disabled={disabled}
-          aria-label={isExpanded ? "Recolher" : "Expandir"}
         >
-          {toggleRenderer({
-            expanded: isExpanded,
-            iconClassName: mergedToggleIconClass,
-          })}
+          {labelContent}
         </button>
+      ) : (
         <span
-          className={cn(
-            treeIconWrapperVariants({ density }),
-            BASE_CLASSNAMES.tree.icon
-          )}
+          className="flex flex-1 items-center gap-2"
+          onClick={(event) => {
+            if (expandOnLabelClick) {
+              handleToggle(event as React.MouseEvent<HTMLButtonElement>);
+            }
+          }}
         >
-          {renderIcon(icon, mergedItemIconClass)}
+          {labelContent}
         </span>
-        {onSelect ? (
-          <button
-            type="button"
-            className="flex flex-1 items-center gap-2 text-left"
-            onClick={(event) => {
-              if (expandOnLabelClick) {
-                handleToggle(event);
-              }
-              onSelect(event);
-            }}
-            disabled={disabled}
-          >
-            {labelContent}
-          </button>
-        ) : (
-          <span
-            className="flex flex-1 items-center gap-2"
-            onClick={(event) => {
-              if (expandOnLabelClick) {
-                handleToggle(event as React.MouseEvent<HTMLButtonElement>);
-              }
-            }}
-          >
-            {labelContent}
-          </span>
+      )}
+    </div>
+  );
+
+  const group = hasChildren ? (
+    <TreeLevelContext.Provider value={level + 1}>
+      <ul
+        ref={contentRef}
+        role="group"
+        data-expanded={isExpanded}
+        className={cn(
+          "flex flex-col overflow-hidden transition-all duration-250 ease-in-out",
+          isExpanded ? "opacity-100" : "pointer-events-none opacity-0",
+          BASE_CLASSNAMES.tree.group
         )}
-      </div>
-      {isExpanded && children ? (
-        <TreeLevelContext.Provider value={level + 1}>
-          <ul role="group" className={cn("flex flex-col", BASE_CLASSNAMES.tree.group)}>
-            {children}
-          </ul>
-        </TreeLevelContext.Provider>
-      ) : null}
+        style={{
+          maxHeight: isExpanded
+            ? contentHeight
+              ? `${contentHeight}px`
+              : "999px"
+            : "0px",
+          opacity: isExpanded ? 1 : 0,
+          willChange: "max-height, opacity",
+        }}
+        aria-hidden={!isExpanded}
+      >
+        {children}
+      </ul>
+    </TreeLevelContext.Provider>
+  ) : null;
+
+  const containerProps: React.LiHTMLAttributes<HTMLLIElement> = {
+    role: "treeitem",
+    "aria-expanded": isExpanded,
+    className: "list-none",
+    ...props,
+  };
+
+  const defaultNode = (
+    <li {...containerProps}>
+      {content}
+      {group}
     </li>
   );
+
+  const renderItemFn =
+    (renderItem as TreeRenderItem | undefined) ?? contextRenderItem;
+
+  const rendered =
+    renderItemFn?.({
+      type: "branch",
+      level,
+      label,
+      icon,
+      collapsedIcon,
+      expandedIcon,
+      iconClassName: mergedItemIconClass,
+      iconNode,
+      collapsedIconNode,
+      expandedIconNode,
+      toggleIconNode,
+      defaultNode,
+      expanded: isExpanded,
+      hasChildren,
+      disabled,
+      toggle: handleToggle,
+      onSelect,
+      density,
+      variant,
+      content,
+      group,
+      containerProps,
+    }) ?? null;
+
+  return rendered ?? defaultNode;
 };
 
 interface TreeLeafProps
-  extends Omit<React.HTMLAttributes<HTMLDivElement>, "children"> {
+  extends Omit<React.LiHTMLAttributes<HTMLLIElement>, "children"> {
   label: ReactNode;
   icon?: TreeIconProp;
   iconClassName?: string;
   labelClassName?: string;
   onSelect?: (event: React.MouseEvent<HTMLButtonElement>) => void;
   disabled?: boolean;
+  renderItem?: (params: TreeLeafRenderParams) => ReactNode;
 }
 
 const TreeLeaf = ({
@@ -322,10 +519,17 @@ const TreeLeaf = ({
   labelClassName,
   onSelect,
   disabled = false,
+  renderItem,
   className,
   ...props
 }: TreeLeafProps) => {
-  const { density, variant, iconClassName: contextIconClass, indent } =
+  const {
+    density,
+    variant,
+    iconClassName: contextIconClass,
+    indent,
+    renderItem: contextRenderItem,
+  } =
     useTreeConfig();
   const level = useTreeLevel();
 
@@ -346,52 +550,82 @@ const TreeLeaf = ({
     </span>
   );
 
-  return (
-    <li
-      role="treeitem"
-      aria-expanded={false}
-      className="list-none"
-      {...props}
+  const iconNode = renderIcon(icon, mergedIconClass);
+
+  const content = (
+    <div
+      className={cn(
+        treeItemVariants({ variant, density, disabled }),
+        BASE_CLASSNAMES.tree.item,
+        className
+      )}
+      style={paddingStyle}
     >
-      <div
+      <span
         className={cn(
-          treeItemVariants({ variant, density, disabled }),
-          BASE_CLASSNAMES.tree.item,
-          className
+          treeToggleVariants({ variant, density }),
+          "pointer-events-none opacity-0",
+          BASE_CLASSNAMES.tree.toggle
         )}
-        style={paddingStyle}
+        aria-hidden="true"
+      />
+      <span
+        className={cn(
+          treeIconWrapperVariants({ density }),
+          BASE_CLASSNAMES.tree.icon
+        )}
       >
-        <span
-          className={cn(
-            treeToggleVariants({ variant, density }),
-            "pointer-events-none opacity-0",
-            BASE_CLASSNAMES.tree.toggle
-          )}
-          aria-hidden="true"
-        />
-        <span
-          className={cn(
-            treeIconWrapperVariants({ density }),
-            BASE_CLASSNAMES.tree.icon
-          )}
+        {iconNode}
+      </span>
+      {onSelect ? (
+        <button
+          type="button"
+          className="flex flex-1 items-center gap-2 text-left"
+          onClick={onSelect}
+          disabled={disabled}
         >
-          {renderIcon(icon, mergedIconClass)}
-        </span>
-        {onSelect ? (
-          <button
-            type="button"
-            className="flex flex-1 items-center gap-2 text-left"
-            onClick={onSelect}
-            disabled={disabled}
-          >
-            {labelContent}
-          </button>
-        ) : (
-          <span className="flex flex-1 items-center gap-2">{labelContent}</span>
-        )}
-      </div>
+          {labelContent}
+        </button>
+      ) : (
+        <span className="flex flex-1 items-center gap-2">{labelContent}</span>
+      )}
+    </div>
+  );
+
+  const containerProps: React.LiHTMLAttributes<HTMLLIElement> = {
+    role: "treeitem",
+    "aria-expanded": false,
+    className: "list-none",
+    ...props,
+  };
+
+  const defaultNode = (
+    <li {...containerProps}>
+      {content}
     </li>
   );
+
+  const renderItemFn =
+    (renderItem as TreeRenderItem | undefined) ?? contextRenderItem;
+
+  const rendered =
+    renderItemFn?.({
+      type: "leaf",
+      level,
+      label,
+      icon,
+      iconClassName: mergedIconClass,
+      defaultNode,
+      disabled,
+      onSelect,
+      density,
+      variant,
+      iconNode,
+      content,
+      containerProps,
+    }) ?? null;
+
+  return rendered ?? defaultNode;
 };
 
 TreeBranch.displayName = "TreeBranch";
@@ -403,4 +637,10 @@ const TreeNamespace = Object.assign(Tree, {
 });
 
 export { TreeNamespace as Tree };
-export type { TreeBranchProps, TreeLeafProps };
+export type {
+  TreeBranchProps,
+  TreeLeafProps,
+  TreeBranchRenderParams,
+  TreeLeafRenderParams,
+  TreeRenderItem,
+};

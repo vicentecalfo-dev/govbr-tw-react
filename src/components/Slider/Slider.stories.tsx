@@ -23,17 +23,17 @@ type Story = StoryObj<SliderProps>;
 
 /** 1) Slider padrão (não controlado) */
 export const Default: Story = {
-  render: () =>{
-    const args = {
+  render: () => {
+    const sliderArgs = {
       defaultValue: 40,
-      onChange: (v: number) => console.log("Slider value:", v),
+      onChange: (v: number | [number, number]) => console.log("Slider value:", v),
     };
-      return (
-      <div className="w-[360px] flex flex-col gap-2">
-        <Slider {...args}  />
+    return (
+      <div className="flex w-[360px] flex-col gap-2">
+        <Slider {...sliderArgs} />
       </div>
     );
-  }
+  },
 };
 
 /** 2) Controlado externamente */
@@ -41,8 +41,14 @@ export const Controlled: Story = {
   render: (args) => {
     const [val, setVal] = useState(60);
     return (
-      <div className="w-[360px] flex flex-col gap-2">
-        <Slider {...args} value={val} onChange={setVal} />
+      <div className="flex w-[360px] flex-col gap-2">
+        <Slider
+          {...args}
+          value={val}
+          onChange={(next) => {
+            if (typeof next === "number") setVal(next);
+          }}
+        />
         <p className="text-sm opacity-70">Valor atual: {val}</p>
       </div>
     );
@@ -57,7 +63,7 @@ export const Controlled: Story = {
 /** 3) Densidades */
 export const Densities: Story = {
   render: (args) => (
-    <div className="w-[420px] space-y-6">
+    <div className="space-y-6 w-[420px]">
       <div>
         <p className="text-sm mb-1 opacity-70">lowest</p>
         <Slider {...args} density="lowest" defaultValue={30} />
@@ -81,7 +87,7 @@ export const Densities: Story = {
 /** 4) Variantes */
 export const Variants: Story = {
   render: (args) => (
-    <div className="w-[420px] space-y-6">
+    <div className="space-y-6 w-[420px]">
       <div>
         <p className="text-sm mb-1 opacity-70">default</p>
         <Slider {...args} variant="default" defaultValue={20} />
@@ -107,8 +113,15 @@ export const Disabled: Story = {
   render: (args) => {
     const [val, setVal] = useState(60);
     return (
-      <div className="w-[360px] flex flex-col gap-2">
-        <Slider {...args} value={val} onChange={setVal} disabled />
+      <div className="flex w-[360px] flex-col gap-2">
+        <Slider
+          {...args}
+          value={val}
+          onChange={(next) => {
+            if (typeof next === "number") setVal(next);
+          }}
+          disabled
+        />
         <p className="text-sm opacity-70">Valor atual: {val}</p>
       </div>
     );
@@ -125,8 +138,14 @@ export const CustomColors: Story = {
   render: (args) => {
     const [val, setVal] = useState(60);
     return (
-      <div className="w-[360px] flex flex-col gap-2">
-        <Slider {...args} value={val} onChange={setVal} disabled />
+      <div className="flex w-[360px] flex-col gap-2">
+        <Slider
+          {...args}
+          value={val}
+          onChange={(next) => {
+            if (typeof next === "number") setVal(next);
+          }}
+        />
         <p className="text-sm opacity-70">Valor atual: {val}</p>
       </div>
     );
@@ -167,11 +186,42 @@ export const DynamicDemo: Story = {
           max={100}
           step={5}
           value={val}
-          onChange={setVal}
+          onChange={(next) => {
+            if (typeof next === "number") setVal(next);
+          }}
           showValue
           colors={colors}
         />
       </div>
     );
+  },
+};
+
+export const Range: Story = {
+  render: (args) => {
+    const [rangeValue, setRangeValue] = useState<[number, number]>([20, 70]);
+    return (
+      <div className="w-[400px] space-y-3">
+        <p className="text-sm opacity-70">
+          Intervalo: {rangeValue[0]} - {rangeValue[1]}
+        </p>
+        <Slider
+          {...args}
+          range
+          min={0}
+          max={100}
+          step={5}
+          value={rangeValue}
+          onChange={(next) => {
+            if (Array.isArray(next)) setRangeValue(next);
+          }}
+          showValue={false}
+        />
+      </div>
+    );
+  },
+  args: {
+    density: "default",
+    variant: "default",
   },
 };

@@ -75,7 +75,7 @@ const customColumns: TableColumn<Person>[] = [
   {
     key: "status",
     header: "Status",
-    cell: ({ value }) => (
+    cell: ({ value }:any) => (
       <Badge
         variant={value === "Ativo" ? "success-light" : "warning-light"}
         size="small"

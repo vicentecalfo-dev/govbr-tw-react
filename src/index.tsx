@@ -4,6 +4,8 @@ import { AvatarGroup } from "./components/AvatarGroup";
 import { Persona } from "./components/Persona";
 import { Rating } from "./components/Rating";
 import { SearchBox } from "./components/SearchBox";
+import { Tree } from "./components/Tree";
+import Table from "./components/Table";
 import Badge from "./components/Badge";
 import Breadcrumb from "./components/Breadcrumb";
 import { Button } from "./components/Button";
@@ -60,6 +62,8 @@ export {
     Persona,
     Rating,
     SearchBox,
+    Tree,
+    Table,
     Badge,
     Breadcrumb,
     Button,

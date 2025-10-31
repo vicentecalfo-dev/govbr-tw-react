@@ -19,6 +19,13 @@ const BASE_CLASSNAMES: Record<string, Record<string, string>> = {
     option: "govbr-searchbox-option",
     icon: "govbr-searchbox-icon",
   },
+  tree: {
+    root: "govbr-tree",
+    item: "govbr-tree-item",
+    toggle: "govbr-tree-toggle",
+    icon: "govbr-tree-icon",
+    group: "govbr-tree-group",
+  },
   avatarGroup: {
     root: "govbr-avatar-group",
     item: "govbr-avatar-group-item",
@@ -110,6 +117,15 @@ const BASE_CLASSNAMES: Record<string, Record<string, string>> = {
     tab: "govbr-tab",
     button: "govbr-tab-button",
     content: "govbr-tab-content",
+  },
+  table: {
+    root: "govbr-table",
+    head: "govbr-table-head",
+    headerRow: "govbr-table-header-row",
+    headerCell: "govbr-table-header-cell",
+    body: "govbr-table-body",
+    row: "govbr-table-row",
+    cell: "govbr-table-cell",
   },
   dialog: {
     root: "govbr-dialog",

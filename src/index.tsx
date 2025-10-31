@@ -30,6 +30,7 @@ import NativeSelect from "./components/NativeSelect";
 import Radio from "./components/Radio";
 import GroupOptions from "./components/GroupOptions";
 import Sheet from "./components/Sheet";
+import { Step } from "./components/Step";
 import {
     DropdownMenu,
     DropdownMenuCheckboxItem,
@@ -100,6 +101,7 @@ export {
     Radio,
     GroupOptions,
     Sheet,
+    Step,
     Spinner,
     Status,
     Switch,

@@ -201,6 +201,16 @@ const BASE_CLASSNAMES: Record<string, Record<string, string>> = {
     footer: "govbr-sheet-footer",
     close: "govbr-sheet-close-button",
   },
+  step: {
+    root: "govbr-step",
+    item: "govbr-step-item",
+    indicator: "govbr-step-indicator",
+    connectorHorizontal: "govbr-step-connector-horizontal",
+    connectorVertical: "govbr-step-connector-vertical",
+    content: "govbr-step-content",
+    label: "govbr-step-label",
+    description: "govbr-step-description",
+  },
 };
 
 export default BASE_CLASSNAMES;

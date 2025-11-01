@@ -32,6 +32,11 @@ const BASE_CLASSNAMES: Record<string, Record<string, string>> = {
     stacked: "govbr-avatar-group-stacked",
     overflow: "govbr-avatar-group-overflow",
   },
+  iucnCategory: {
+    root: "govbr-iucn-category",
+    wrapper: "govbr-iucn-category-wrapper",
+    label: "govbr-iucn-category-label",
+  },
   button: {
     root: "govbr-button",
   },

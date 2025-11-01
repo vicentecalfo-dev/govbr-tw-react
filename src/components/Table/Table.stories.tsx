@@ -107,6 +107,66 @@ const customColumns: TableColumn<Person>[] = [
   },
 ];
 
+type AttendanceSummary = {
+  id: string;
+  unit: string;
+  presencial: number;
+  remoto: number;
+  total: number;
+};
+
+const attendanceData: AttendanceSummary[] = [
+  {
+    id: "1",
+    unit: "Atendimento Presencial",
+    presencial: 420,
+    remoto: 180,
+    total: 600,
+  },
+  {
+    id: "2",
+    unit: "Portal de Servicos",
+    presencial: 260,
+    remoto: 340,
+    total: 600,
+  },
+  {
+    id: "3",
+    unit: "Ouvidoria",
+    presencial: 180,
+    remoto: 120,
+    total: 300,
+  },
+];
+
+const attendanceColumns: TableColumn<AttendanceSummary>[] = [
+  {
+    key: "unit",
+    header: "Unidade",
+  },
+  {
+    key: "presencial",
+    header: "Presencial",
+    align: "right",
+    cell: ({ value }) =>
+      Number(value).toLocaleString("pt-BR"),
+  },
+  {
+    key: "remoto",
+    header: "Remoto",
+    align: "right",
+    cell: ({ value }) =>
+      Number(value).toLocaleString("pt-BR"),
+  },
+  {
+    key: "total",
+    header: "Total",
+    align: "right",
+    cell: ({ value }) =>
+      Number(value).toLocaleString("pt-BR"),
+  },
+];
+
 export default {
   component: Table,
   title: "Table",
@@ -163,4 +223,17 @@ export const Dark = () => (
     variant="dark"
   />
 </div>
+);
+
+export const WithSum = () => (
+  <Table<AttendanceSummary>
+    bordered
+    columns={attendanceColumns}
+    data={attendanceData}
+    density="relaxed"
+    rowKey={({ id }) => id}
+    sum={["presencial", "remoto", "total"]}
+    sumLabel="Total geral"
+    sumFormatter={(value) => value.toLocaleString("pt-BR")}
+  />
 );

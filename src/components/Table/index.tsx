@@ -49,6 +49,9 @@ interface TableProps<T extends Record<string, unknown>>
   emptyMessage?: ReactNode;
   rowKey?: (row: T, context: { rowIndex: number }) => string | number;
   className?: string;
+  sum?: (keyof T & string)[];
+  sumLabel?: ReactNode;
+  sumFormatter?: (value: number, key: string) => ReactNode;
 }
 
 const TableComponent = <T extends Record<string, unknown>>(
@@ -65,6 +68,9 @@ const TableComponent = <T extends Record<string, unknown>>(
     lined = true,
     emptyMessage,
     rowKey,
+    sum,
+    sumLabel = "Total",
+    sumFormatter,
     ...props
   }: TableProps<T>,
   ref: Ref<HTMLTableElement>,
@@ -78,6 +84,38 @@ const TableComponent = <T extends Record<string, unknown>>(
     }
     return "Nenhum dado disponível";
   }, [emptyMessage]);
+
+  const sumValues = useMemo(() => {
+    if (!sum?.length || data.length === 0) {
+      return null;
+    }
+
+    return sum.reduce<Record<string, number>>((acc, key) => {
+      const stringKey = String(key);
+      const total = data.reduce((currentTotal, row) => {
+        const rawValue = (row as Record<string, unknown>)[stringKey];
+        let numericValue: number | null = null;
+
+        if (typeof rawValue === "number") {
+          numericValue = rawValue;
+        } else if (typeof rawValue === "string") {
+          const parsed = Number(rawValue);
+          numericValue = Number.isFinite(parsed) ? parsed : null;
+        }
+
+        if (numericValue === null) {
+          return currentTotal;
+        }
+
+        return currentTotal + numericValue;
+      }, 0);
+
+      acc[stringKey] = total;
+      return acc;
+    }, {});
+  }, [data, sum]);
+
+  const hasSumRow = sumValues !== null;
 
   return (
     <table
@@ -201,11 +239,13 @@ const TableComponent = <T extends Record<string, unknown>>(
                         cellClassName,
                         rounded
                           ? cn(
-                              rowIndex === data.length - 1 &&
+                              !hasSumRow &&
+                                rowIndex === data.length - 1 &&
                                 columnIndex === 0
                                 ? "rounded-bl-lg"
                                 : undefined,
-                              rowIndex === data.length - 1 &&
+                              !hasSumRow &&
+                                rowIndex === data.length - 1 &&
                                 columnIndex === columnCount - 1
                                 ? "rounded-br-lg"
                                 : undefined,
@@ -222,6 +262,53 @@ const TableComponent = <T extends Record<string, unknown>>(
             );
           })
         )}
+        {hasSumRow ? (
+          <tr
+            className={cn(
+              tableRowVariants({ variant, striped: false }),
+              "font-semibold",
+              BASE_CLASSNAMES.table.row,
+            )}
+          >
+            {columns.map(({ key, accessor, align, cellClassName }, columnIndex) => {
+              const resolvedKey =
+                typeof accessor === "string" ? accessor : key;
+              const sumValue = sumValues?.[resolvedKey];
+              const cellContent =
+                sumValue !== undefined
+                  ? (sumFormatter?.(sumValue, resolvedKey) ?? sumValue)
+                  : columnIndex === 0
+                    ? sumLabel
+                    : undefined;
+
+              return (
+                <td
+                  key={key}
+                  className={cn(
+                    tableCellVariants({
+                      variant,
+                      density,
+                      align: align ?? "left",
+                      lined,
+                    }),
+                    cellClassName,
+                    rounded
+                      ? cn(
+                          columnIndex === 0 ? "rounded-bl-lg" : undefined,
+                          columnIndex === columnCount - 1
+                            ? "rounded-br-lg"
+                            : undefined,
+                        )
+                      : undefined,
+                    BASE_CLASSNAMES.table.cell,
+                  )}
+                >
+                  {cellContent as ReactNode}
+                </td>
+              );
+            })}
+          </tr>
+        ) : null}
       </tbody>
     </table>
   );

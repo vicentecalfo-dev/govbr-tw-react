@@ -7,7 +7,7 @@ import React from "react";
 import BASE_CLASSNAMES from "../../config/baseClassNames";
 import { cn } from "../../libs/utils";
 
-interface InputProps
+export interface InputProps
   extends ComponentProps<"input">,
     VariantProps<typeof inputVariants> {
   hint?: string;

@@ -100,7 +100,7 @@ const AvatarGroup = ({
     : visibleAvatars;
 
   const processed = entries.map((entry, index) => {
-    if (!isValidElement(entry)) {
+    if (!isValidElement<{ className?: string; style?: CSSProperties }>(entry)) {
       return entry;
     }
 

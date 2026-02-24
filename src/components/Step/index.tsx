@@ -98,7 +98,7 @@ const Step = forwardRef<HTMLOListElement, StepProps>(
       () =>
         Children.toArray(children).filter((child) =>
           isValidElement(child),
-        ) as React.ReactElement<StepItemProps>[],
+        ) as React.ReactElement<StepItemProps & PrivateStepItemProps>[],
       [children],
     );
 
@@ -324,7 +324,6 @@ const StepNamespace = Object.assign(Step, {
 
 export { StepNamespace as Step };
 export type { StepStatus, StepOrientation };
-
 
 
 

@@ -212,9 +212,7 @@ const TableComponent = <T extends Record<string, unknown>>(
                     typeof accessor === "function"
                       ? accessor(row, { rowIndex, columnIndex })
                       : accessor
-                        ? (row as Record<string, unknown>)[
-                            accessor as keyof T
-                          ]
+                        ? row[accessor]
                         : (row as Record<string, unknown>)[key];
 
                   const cellContent =

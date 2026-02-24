@@ -24,6 +24,7 @@ import { GovLogo } from "./components/GovLogo";
 import { Header } from "./components/Header";
 import Input from "./components/Input";
 import List from "./components/List";
+import Login from "./components/Login";
 import Message from "./components/Message";
 import OtpInput from "./components/OtpInput";
 import NativeSelect from "./components/NativeSelect";
@@ -95,6 +96,7 @@ export {
     GovBRLogo,
     Input,
     List,
+    Login,
     Message,
     OtpInput,
     NativeSelect,

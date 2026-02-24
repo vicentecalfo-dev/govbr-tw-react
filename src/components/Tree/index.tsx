@@ -149,10 +149,12 @@ const Tree = ({
   children,
   ...props
 }: TreeProps) => {
+  const resolvedDensity = density ?? "default";
+  const resolvedVariant = variant ?? "default";
   const contextValue = useMemo<TreeContextValue>(
     () => ({
-      density,
-      variant,
+      density: resolvedDensity,
+      variant: resolvedVariant,
       iconClassName,
       indent,
       renderToggleIcon,
@@ -161,8 +163,8 @@ const Tree = ({
       branchExpandedIcon,
     }),
     [
-      density,
-      variant,
+      resolvedDensity,
+      resolvedVariant,
       iconClassName,
       indent,
       renderToggleIcon,
@@ -178,7 +180,7 @@ const Tree = ({
         <ul
           role="tree"
           className={cn(
-            treeVariants({ density, variant }),
+            treeVariants({ density: resolvedDensity, variant: resolvedVariant }),
             BASE_CLASSNAMES.tree.root,
             className
           )}
@@ -200,7 +202,7 @@ const renderIcon = (icon: TreeIconProp | undefined, iconClassName: string) => {
     return icon(iconClassName);
   }
 
-  if (isValidElement(icon)) {
+  if (isValidElement<{ className?: string }>(icon)) {
     return cloneElement(icon, {
       className: cn(icon.props.className, iconClassName),
     });
@@ -219,7 +221,7 @@ const renderIcon = (icon: TreeIconProp | undefined, iconClassName: string) => {
 };
 
 interface TreeBranchProps
-  extends Omit<React.LiHTMLAttributes<HTMLLIElement>, "children"> {
+  extends Omit<React.LiHTMLAttributes<HTMLLIElement>, "children" | "onSelect"> {
   label: ReactNode;
   children?: ReactNode;
   defaultExpanded?: boolean;
@@ -502,7 +504,7 @@ const TreeBranch = ({
 };
 
 interface TreeLeafProps
-  extends Omit<React.LiHTMLAttributes<HTMLLIElement>, "children"> {
+  extends Omit<React.LiHTMLAttributes<HTMLLIElement>, "children" | "onSelect"> {
   label: ReactNode;
   icon?: TreeIconProp;
   iconClassName?: string;

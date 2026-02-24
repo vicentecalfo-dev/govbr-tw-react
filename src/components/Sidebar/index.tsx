@@ -832,7 +832,7 @@ export const SidebarMenuSubButton = forwardRef<HTMLButtonElement, SidebarMenuSub
           sidebarMenuSubButtonVariants({
             theme,
             size,
-            active: isActive ? "true" : "false",
+            active: isActive ?? false,
           }),
           className
         )}

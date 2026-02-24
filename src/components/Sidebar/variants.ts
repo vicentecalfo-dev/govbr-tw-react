@@ -275,5 +275,9 @@ export const sidebarGroupActionVariants = cva(
   }
 );
 
-export type SidebarMenuButtonVariantProps = Pick<VariantProps<typeof sidebarMenuButtonVariants>, "size" | "variant">;
-export type SidebarMenuSubButtonVariantProps = Pick<VariantProps<typeof sidebarMenuSubButtonVariants>, "size">;
+export type SidebarMenuButtonVariantProps = Partial<
+  Pick<VariantProps<typeof sidebarMenuButtonVariants>, "size" | "variant">
+>;
+export type SidebarMenuSubButtonVariantProps = Partial<
+  Pick<VariantProps<typeof sidebarMenuSubButtonVariants>, "size">
+>;

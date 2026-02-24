@@ -586,8 +586,9 @@ export const SidebarMenuItem = forwardRef<HTMLLIElement, SidebarMenuItemProps>(
 SidebarMenuItem.displayName = "SidebarMenuItem";
 
 export interface SidebarMenuButtonProps
-  extends React.ButtonHTMLAttributes<HTMLButtonElement>,
-    SidebarMenuButtonVariantProps {
+  extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+  size?: SidebarMenuButtonVariantProps["size"];
+  variant?: SidebarMenuButtonVariantProps["variant"];
   isActive?: boolean;
   icon?: React.ReactNode;
   tooltip?: React.ReactNode;

@@ -100,6 +100,11 @@ const BASE_CLASSNAMES: Record<string, Record<string, string>> = {
     root: "govbr-input",
     control: "govbr-input-control",
   },
+  formLabel: {
+    root: "govbr-form-label",
+    label: "govbr-form-label-label",
+    hint: "govbr-form-label-hint",
+  },
   otpInput: {
     root: "govbr-otp-input",
     slot: "govbr-otp-input-slot",
